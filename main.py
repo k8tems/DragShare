@@ -20,7 +20,7 @@ def get_api():
 def share_image(image_file):
     api = get_api()
     media_id = api.upload_media(media=image_file)['media_id']
-    api.update_status(status='test', media_ids=[media_id])
+    api.update_status(media_ids=[media_id])
 
 
 class Area(dict):
