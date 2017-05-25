@@ -1,4 +1,7 @@
+import tempfile
+import uuid
 import yaml
+import os
 from twython import Twython
 from PIL import ImageGrab
 
@@ -26,6 +29,8 @@ def get_image_of_area(area):
 if __name__ == '__main__':
     image = get_image_of_area((0, 0, 50, 50))
     # can't get this to work with BytesIO
-    image.save('a.png')
-    with open('a.png', 'rb') as f:
+    fname = os.path.join(tempfile.gettempdir(), str(uuid.uuid4()))
+    image.save(fname, format='png')
+    with open(fname, 'rb') as f:
         share_image(f)
+    os.remove(fname)
