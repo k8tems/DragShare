@@ -1,8 +1,8 @@
-import tempfile
-import uuid
-import yaml
 import os
+import uuid
+import tempfile
 from functools import partial
+import yaml
 from pynput import mouse
 from twython import Twython
 from PIL import ImageGrab
