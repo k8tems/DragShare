@@ -14,4 +14,6 @@ def get_api():
 if __name__ == '__main__':
     print('Hello world!')
     api = get_api()
-    api.update_status(status='test')
+    media = open('test.png', 'rb')
+    media_id = api.upload_media(media=media)['media_id']
+    api.update_status(status='test', media_ids=[media_id])
