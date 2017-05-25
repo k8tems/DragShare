@@ -23,6 +23,14 @@ def share_image(image_file):
     api.update_status(status='test', media_ids=[media_id])
 
 
+def get_area_src(src, dest):
+    return min(src[0], dest[0]), min(src[1], dest[1])
+
+
+def get_area_dest(src, dest):
+    return max(src[0], dest[0]), max(src[1], dest[1])
+
+
 def on_click(result, x, y, button, pressed):
     if pressed:
         result['pressed_crd'] = x, y
@@ -36,8 +44,8 @@ def get_area():
     result = {}
     with mouse.Listener(on_click=partial(on_click, result)) as listener:
         listener.join()
-    src = result['pressed_crd']
-    dest = result['released_crd']
+    src = get_area_src(result['pressed_crd'], result['released_crd'])
+    dest = get_area_dest(result['pressed_crd'], result['released_crd'])
     return src[0], src[1], dest[0], dest[1]
 
 
