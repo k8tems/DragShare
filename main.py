@@ -28,4 +28,3 @@ if __name__ == '__main__':
     image.save(fname, format='png')
     with open(fname, 'rb') as f:
         share_image(f)
-    os.remove(fname)
