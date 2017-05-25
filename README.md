@@ -13,4 +13,5 @@ pyinstaller==3.2.1
 - [x] Tweet specified image
 - [x] Compile as executable
 - [x] Share specified area of screen
-- [ ] Select area of screen
+- [x] Select area of screen
+- [ ] Visualize area
