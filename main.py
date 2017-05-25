@@ -35,9 +35,9 @@ class Area(dict):
 
 def on_click(result, x, y, button, pressed):
     if pressed:
-        result['pressed_crd'] = x, y
+        result['press'] = x, y
     else:
-        result['released_crd'] = x, y
+        result['release'] = x, y
         # return False to end listener
         return False
 
