@@ -2,7 +2,7 @@ import unittest
 import main
 
 
-class TestGetAreaSrc(unittest.TestCase):
+class TestGetArea(unittest.TestCase):
     def setUp(self):
         self.area = main.Area()
 
