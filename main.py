@@ -32,12 +32,16 @@ class Area(dict):
     def dest(self):
         return max(self['press'][0], self['release'][0]), max(self['press'][1], self['release'][1])
 
+    @property
+    def bbox(self):
+        return self.src[0], self.src[1], self.dest[0], self.dest[1]
 
-def on_click(result, x, y, button, pressed):
+
+def on_click(area, x, y, button, pressed):
     if pressed:
-        result['press'] = x, y
+        area['press'] = x, y
     else:
-        result['release'] = x, y
+        area['release'] = x, y
         # return False to end listener
         return False
 
@@ -46,7 +50,7 @@ def get_area():
     area = Area()
     with mouse.Listener(on_click=partial(on_click, area)) as listener:
         listener.join()
-    return area.src[0], area.src[1], area.dest[0], area.dest[1]
+    return area.bbox
 
 
 if __name__ == '__main__':
