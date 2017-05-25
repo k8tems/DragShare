@@ -21,13 +21,8 @@ def share_image(image_file):
     api.update_status(status='test', media_ids=[media_id])
 
 
-def get_image_of_area(area):
-    img = ImageGrab.grab(area)
-    return img
-
-
 if __name__ == '__main__':
-    image = get_image_of_area((0, 0, 50, 50))
+    image = ImageGrab.grab((0, 0, 50, 50))
     # can't get this to work with BytesIO
     fname = os.path.join(tempfile.gettempdir(), str(uuid.uuid4()))
     image.save(fname, format='png')
