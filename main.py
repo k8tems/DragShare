@@ -55,8 +55,7 @@ def get_area():
 
 
 if __name__ == '__main__':
-    area = get_area()
-    image = ImageGrab.grab(area)
+    image = ImageGrab.grab(get_area())
     # can't get this to work with BytesIO
     fname = os.path.join(tempfile.gettempdir(), str(uuid.uuid4()))
     image.save(fname, format='png')
