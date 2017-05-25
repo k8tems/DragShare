@@ -1,5 +1,6 @@
 import yaml
 from twython import Twython
+from PIL import ImageGrab
 
 
 def get_api():
@@ -17,6 +18,13 @@ def share_image(image_file):
     api.update_status(status='test', media_ids=[media_id])
 
 
+def get_image_of_area(area):
+    img = ImageGrab.grab(area)
+    return img
+
+
 if __name__ == '__main__':
-    image_file = open('test.png', 'rb')
-    share_image(image_file)
+    image = get_image_of_area((0, 0, 50, 50))
+    image.save('a.png')
+    with open('a.png', 'rb') as f:
+        share_image(f)
