@@ -1,5 +1,5 @@
 # DragShare
 
 - [x] Tweet specified image
-- [ ] Compile as executable
+- [x] Compile as executable
 - [ ] Drag image and tweet
