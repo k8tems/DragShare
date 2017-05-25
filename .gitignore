@@ -4,3 +4,4 @@ settings.yml
 build.bat
 build
 dist
+main.spec
