@@ -11,9 +11,12 @@ def get_api():
         cfg['access_token_secret'])
 
 
-if __name__ == '__main__':
-    print('Hello world!')
+def share_image(image_file):
     api = get_api()
-    media = open('test.png', 'rb')
-    media_id = api.upload_media(media=media)['media_id']
+    media_id = api.upload_media(media=image_file)['media_id']
     api.update_status(status='test', media_ids=[media_id])
+
+
+if __name__ == '__main__':
+    image_file = open('test.png', 'rb')
+    share_image(image_file)
