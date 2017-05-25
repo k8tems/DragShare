@@ -1,4 +1,4 @@
 # DragShare
 
-- [ ] Tweet specified image
+- [x] Tweet specified image
 - [ ] Drag image and tweet
