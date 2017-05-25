@@ -50,12 +50,12 @@ def get_area():
     area = Area()
     with mouse.Listener(on_click=partial(on_click, area)) as listener:
         listener.join()
+    print(area['press'], area['release'])
     return area.bbox
 
 
 if __name__ == '__main__':
     area = get_area()
-    print(area)
     image = ImageGrab.grab(area)
     # can't get this to work with BytesIO
     fname = os.path.join(tempfile.gettempdir(), str(uuid.uuid4()))
