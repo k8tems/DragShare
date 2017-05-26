@@ -1,9 +1,11 @@
+import logging
 from functools import partial
 import threading
 from Tkinter import Tk
 from pynput import mouse
 
 
+logger = logging.getLogger()
 tk = Tk()
 tk.attributes('-alpha', 0.7)
 tk.overrideredirect(1)
@@ -56,14 +58,15 @@ def on_move(drag_area, x, y):
 
 
 def get_area():
+    logger.debug('starting thread')
     t = threading.Thread(target=tk.mainloop, args=())
     t.start()
     drag_area = Area()
     with mouse.Listener(on_click=partial(on_click, drag_area),
                         on_move=partial(on_move, drag_area)) as listener:
-        print('ready')
+        logger.debug('ready')
         listener.join()
-    print(drag_area['init_pos'], drag_area['cur_pos'])
+    logger.debug('%s %s' % (drag_area['init_pos'], drag_area['cur_pos']))
     tk.destroy()
     t.join()
     return drag_area

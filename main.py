@@ -3,6 +3,7 @@ import uuid
 import tempfile
 import yaml
 import time
+import logging.config
 import tkMessageBox
 from tkinter import Tk
 from twython import Twython
@@ -35,6 +36,8 @@ def show_error(msg):
 
 
 def main():
+    logging.config.dictConfig(yaml.load(open('log.conf')))
+
     if not os.path.exists(SETTINGS_FILE):
         show_error('%s does not exist' % SETTINGS_FILE)
         return
