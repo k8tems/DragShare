@@ -3,6 +3,7 @@ import uuid
 import tempfile
 import yaml
 import time
+import logging
 import logging.config
 import tkMessageBox
 from tkinter import Tk
@@ -12,6 +13,7 @@ import area
 
 
 SETTINGS_FILE = 'settings.yml'
+logger = logging.getLogger()
 
 
 def get_api():
@@ -37,6 +39,7 @@ def show_error(msg):
 
 def main():
     logging.config.dictConfig(yaml.load(open('log.conf')))
+    logger.debug('initiating')
 
     if not os.path.exists(SETTINGS_FILE):
         show_error('%s does not exist' % SETTINGS_FILE)
