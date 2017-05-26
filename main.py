@@ -1,11 +1,10 @@
 import os
 import uuid
 import tempfile
-from functools import partial
 import yaml
-from pynput import mouse
 from twython import Twython
 from PIL import ImageGrab
+import area
 
 
 def get_api():
@@ -23,41 +22,14 @@ def share_image(image_file):
     api.update_status(media_ids=[media_id])
 
 
-class Area(dict):
-    @property
-    def src(self):
-        return min(self['press'][0], self['release'][0]), min(self['press'][1], self['release'][1])
-
-    @property
-    def dest(self):
-        return max(self['press'][0], self['release'][0]), max(self['press'][1], self['release'][1])
-
-    @property
-    def bbox(self):
-        return self.src[0], self.src[1], self.dest[0], self.dest[1]
-
-
-def on_click(area, x, y, button, pressed):
-    if pressed:
-        area['press'] = x, y
-    else:
-        area['release'] = x, y
-        # return False to end listener
-        return False
-
-
-def get_area():
-    area = Area()
-    with mouse.Listener(on_click=partial(on_click, area)) as listener:
-        listener.join()
-    print(area['press'], area['release'])
-    return area.bbox
-
-
 if __name__ == '__main__':
-    image = ImageGrab.grab(get_area())
-    # can't get this to work with BytesIO
-    fname = os.path.join(tempfile.gettempdir(), str(uuid.uuid4()))
-    image.save(fname, format='png')
-    with open(fname, 'rb') as f:
-        share_image(f)
+    a = area.get_area()
+    if a.width == 0 or a.height == 0:
+        print('Invalid area ' + str(a))
+    else:
+        image = ImageGrab.grab(a.bbox)
+        # can't get this to work with BytesIO
+        fname = os.path.join(tempfile.gettempdir(), str(uuid.uuid4()))
+        image.save(fname, format='png')
+        with open(fname, 'rb') as f:
+            share_image(f)
