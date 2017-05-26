@@ -4,6 +4,7 @@ import tempfile
 import yaml
 import time
 import tkMessageBox
+from tkinter import Tk
 from twython import Twython
 from PIL import ImageGrab
 import area
@@ -28,6 +29,8 @@ def share_image(image_file):
 
 
 def show_error(msg):
+    root = Tk()
+    root.withdraw()
     tkMessageBox.showerror('Error', msg)
 
 
@@ -44,6 +47,7 @@ def main():
 
     # wait until the window disappears
     time.sleep(1)
+
     image = ImageGrab.grab(a.bbox)
     # can't get this to work with BytesIO
     fname = os.path.join(tempfile.gettempdir(), str(uuid.uuid4()))
