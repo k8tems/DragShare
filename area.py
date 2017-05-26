@@ -15,6 +15,9 @@ tk.geometry('0x0')
 
 
 class Area(dict):
+    def __init__(self):
+        super(Area, self).__init__(init_pos=(0, 0), cur_pos=(0, 0))
+
     @property
     def src(self):
         return min(self['init_pos'][0], self['cur_pos'][0]), min(self['init_pos'][1], self['cur_pos'][1])
