@@ -16,7 +16,7 @@ tk.geometry('0x0')
 
 class Area(dict):
     def __init__(self):
-        super(Area, self).__init__(init_pos=(0, 0), cur_pos=(0, 0))
+        super(Area, self).__init__(init_pos=None, cur_pos=None)
 
     @property
     def src(self):
@@ -54,7 +54,7 @@ def update_geometry(drag_area):
 
 
 def on_move(drag_area, x, y):
-    if 'init_pos' in drag_area:
+    if drag_area['init_pos']:
         drag_area['cur_pos'] = x, y
         print(drag_area['init_pos'], drag_area['cur_pos'])
         update_geometry(drag_area)
