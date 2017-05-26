@@ -2,6 +2,7 @@ import os
 import uuid
 import tempfile
 import yaml
+import time
 from twython import Twython
 from PIL import ImageGrab
 import area
@@ -27,6 +28,8 @@ if __name__ == '__main__':
     if a.width == 0 or a.height == 0:
         print('Invalid area ' + str(a))
     else:
+        # wait until the window disappears
+        time.sleep(1)
         image = ImageGrab.grab(a.bbox)
         # can't get this to work with BytesIO
         fname = os.path.join(tempfile.gettempdir(), str(uuid.uuid4()))

@@ -16,3 +16,4 @@ pyinstaller==3.2.1
 - [x] Select area of screen
 - [x] Visualize area
 - [ ] Change cursor when ready
+- [ ] Add early check for settings and warn via message box
