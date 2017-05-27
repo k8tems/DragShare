@@ -49,11 +49,14 @@ def ensure_single_instance():
     singleton('DragShare')
 
 
+def configure_logging():
+    logging.config.dictConfig(yaml.load(open('log.conf')))
+
+
 def main():
     logger.info('Initiating')
     ensure_single_instance()
-
-    logging.config.dictConfig(yaml.load(open('log.conf')))
+    configure_logging()
 
     if not os.path.exists(SETTINGS_FILE):
         show_error('%s does not exist' % SETTINGS_FILE)
