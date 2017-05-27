@@ -64,6 +64,7 @@ def on_move(drag_area, x, y):
 def monitor_area():
     """
     Monitors and returns the area dragged by mouse
+    This method is not thread safe
     :return: Area object representing the area dragged by mouse
     """
     logger.debug('starting thread')
