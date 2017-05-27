@@ -39,6 +39,10 @@ class Area(dict):
     def bbox(self):
         return self.src[0], self.src[1], self.dest[0], self.dest[1]
 
+    @property
+    def is_valid(self):
+        return self.width >= 0 and self.height >= 0
+
 
 def on_click(area, x, y, button, pressed):
     if pressed:

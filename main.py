@@ -46,7 +46,7 @@ def main():
 
     a = area.monitor_area()
 
-    if a.width == 0 or a.height == 0:
+    if not a.is_valid:
         show_error('Invalid area ' + str(a))
         return
 
