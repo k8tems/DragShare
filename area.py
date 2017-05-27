@@ -84,6 +84,8 @@ class MonitorContext(object):
         logger.debug('Leaving context')
         drag_window.destroy()
         self.t.join()
+        # wait until the window disappears
+        time.sleep(1)
         return self
 
 
@@ -100,6 +102,4 @@ def monitor_area():
             logger.debug('ready')
             listener.join()
         logger.debug('%s %s' % (drag_area['init_pos'], drag_area['cur_pos']))
-    # wait until the window disappears
-    time.sleep(1)
     return drag_area
