@@ -1,3 +1,4 @@
+import time
 import logging
 from functools import partial
 import threading
@@ -76,4 +77,6 @@ def monitor_area():
     logger.debug('%s %s' % (drag_area['init_pos'], drag_area['cur_pos']))
     tk.destroy()
     t.join()
+    # wait until the window disappears
+    time.sleep(1)
     return drag_area

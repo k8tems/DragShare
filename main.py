@@ -2,7 +2,6 @@ import os
 import uuid
 import tempfile
 import yaml
-import time
 import logging
 import logging.config
 import tkMessageBox
@@ -50,9 +49,6 @@ def main():
     if a.width == 0 or a.height == 0:
         show_error('Invalid area ' + str(a))
         return
-
-    # wait until the window disappears
-    time.sleep(1)
 
     image = ImageGrab.grab(a.bbox)
     # can't get this to work with BytesIO
