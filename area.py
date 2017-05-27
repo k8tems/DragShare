@@ -102,4 +102,4 @@ def monitor_area():
             logger.debug('ready')
             listener.join()
         logger.debug('%s %s' % (drag_area['init_pos'], drag_area['cur_pos']))
-    return drag_area
+        return drag_area
