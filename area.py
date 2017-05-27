@@ -50,6 +50,7 @@ def update_geometry(drag_area):
 
 
 def on_move(drag_area, x, y):
+    # make sure the mouse has been pressed
     if drag_area['init_pos']:
         drag_area['cur_pos'] = x, y
         logger.debug('%s %s' % (drag_area['init_pos'], drag_area['cur_pos']))
