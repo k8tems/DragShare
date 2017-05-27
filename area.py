@@ -20,24 +20,24 @@ class Area(dict):
         super(Area, self).__init__(init_pos=None, cur_pos=None)
 
     @property
-    def src(self):
+    def left_top(self):
         return min(self['init_pos'][0], self['cur_pos'][0]), min(self['init_pos'][1], self['cur_pos'][1])
 
     @property
-    def dest(self):
+    def right_bottom(self):
         return max(self['init_pos'][0], self['cur_pos'][0]), max(self['init_pos'][1], self['cur_pos'][1])
 
     @property
     def width(self):
-        return self.dest[0] - self.src[0]
+        return self.right_bottom[0] - self.left_top[0]
 
     @property
     def height(self):
-        return self.dest[1] - self.src[1]
+        return self.right_bottom[1] - self.left_top[1]
 
     @property
     def bbox(self):
-        return self.src[0], self.src[1], self.dest[0], self.dest[1]
+        return self.left_top[0], self.left_top[1], self.right_bottom[0], self.right_bottom[1]
 
     @property
     def is_valid(self):
@@ -45,7 +45,7 @@ class Area(dict):
 
 
 def relocate_drag_window(drag_area):
-    drag_window.geometry("+%d+%d" % drag_area.src)
+    drag_window.geometry("+%d+%d" % drag_area.left_top)
     drag_window.geometry("%dx%d" % (drag_area.width, drag_area.height))
 
 
