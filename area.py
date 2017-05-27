@@ -7,12 +7,12 @@ from pynput import mouse
 
 
 logger = logging.getLogger()
-tk = Tk()
-tk.attributes('-alpha', 0.7)
-tk.overrideredirect(1)
-tk.attributes('-topmost', True)
-# had problems with `tk.deiconify`
-tk.geometry('0x0')
+drag_window = Tk()
+drag_window.attributes('-alpha', 0.7)
+drag_window.overrideredirect(1)
+drag_window.attributes('-topmost', True)
+# had problems with `deiconify()`
+drag_window.geometry('0x0')
 
 
 class Area(dict):
@@ -44,9 +44,9 @@ class Area(dict):
         return self.width >= 0 and self.height >= 0
 
 
-def update_geometry(drag_area):
-    tk.geometry("+%d+%d" % drag_area.src)
-    tk.geometry("%dx%d" % (drag_area.width, drag_area.height))
+def relocate_drag_window(drag_area):
+    drag_window.geometry("+%d+%d" % drag_area.src)
+    drag_window.geometry("%dx%d" % (drag_area.width, drag_area.height))
 
 
 def on_move(drag_area, x, y):
@@ -54,7 +54,7 @@ def on_move(drag_area, x, y):
     if drag_area['init_pos']:
         drag_area['cur_pos'] = x, y
         logger.debug('%s %s' % (drag_area['init_pos'], drag_area['cur_pos']))
-        update_geometry(drag_area)
+        relocate_drag_window(drag_area)
 
 
 def on_click(area, x, y, button, pressed):
@@ -73,7 +73,7 @@ def monitor_area():
     :return: Area object representing the area dragged by mouse
     """
     logger.debug('starting thread')
-    t = threading.Thread(target=tk.mainloop)
+    t = threading.Thread(target=drag_window.mainloop)
     t.start()
     drag_area = Area()
     with mouse.Listener(on_click=partial(on_click, drag_area),
@@ -81,7 +81,7 @@ def monitor_area():
         logger.debug('ready')
         listener.join()
     logger.debug('%s %s' % (drag_area['init_pos'], drag_area['cur_pos']))
-    tk.destroy()
+    drag_window.destroy()
     t.join()
     # wait until the window disappears
     time.sleep(1)
