@@ -45,7 +45,7 @@ def main():
         show_error('%s does not exist' % SETTINGS_FILE)
         return
 
-    a = area.get_area()
+    a = area.monitor_area()
 
     if a.width == 0 or a.height == 0:
         show_error('Invalid area ' + str(a))

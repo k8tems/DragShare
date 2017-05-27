@@ -56,11 +56,15 @@ def update_geometry(drag_area):
 def on_move(drag_area, x, y):
     if drag_area['init_pos']:
         drag_area['cur_pos'] = x, y
-        logger.debug(drag_area['init_pos'], drag_area['cur_pos'])
+        logger.debug('%s %s' % (drag_area['init_pos'], drag_area['cur_pos']))
         update_geometry(drag_area)
 
 
-def get_area():
+def monitor_area():
+    """
+    Monitors and returns the area dragged via mouse
+    :return: Area object representing the area dragged via mouse
+    """
     logger.debug('starting thread')
     t = threading.Thread(target=tk.mainloop)
     t.start()
