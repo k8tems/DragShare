@@ -36,6 +36,14 @@ def show_error(msg):
     tkMessageBox.showerror('Error', msg)
 
 
+def generate_temp_file_name():
+    return os.path.join(tempfile.gettempdir(), str(uuid.uuid4()))
+
+
+def take_screen_shot(bbox):
+    return ImageGrab.grab(bbox)
+
+
 def main():
     logging.config.dictConfig(yaml.load(open('log.conf')))
     logger.debug('initiating')
@@ -50,11 +58,11 @@ def main():
         show_error('Invalid area ' + str(a))
         return
 
-    image = ImageGrab.grab(a.bbox)
+    image = take_screen_shot(a.bbox)
     # can't get this to work with BytesIO
-    fname = os.path.join(tempfile.gettempdir(), str(uuid.uuid4()))
-    image.save(fname, format='png')
-    with open(fname, 'rb') as f:
+    image_file_name = generate_temp_file_name()
+    image.save(image_file_name, format='png')
+    with open(image_file_name, 'rb') as f:
         share_image(f)
 
 
