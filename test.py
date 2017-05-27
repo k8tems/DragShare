@@ -4,7 +4,7 @@ import area
 
 class TestArea(unittest.TestCase):
     def setUp(self):
-        self.area = area.Area()
+        self.area = area.DragArea()
 
     def test_init_pos_x_y_less_than_cur_pos_x_y(self):
         self.area['init_pos'] = 10, 10

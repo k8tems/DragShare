@@ -15,14 +15,14 @@ drag_window.attributes('-topmost', True)
 drag_window.geometry('0x0')
 
 
-class Area(dict):
+class DragArea(dict):
     """
     Class that represents the area dragged by mouse
     init_pos represents the location of which the mouse was pressed
     cur_pos represents the location of which the mouse was last seen
     """
     def __init__(self):
-        super(Area, self).__init__(init_pos=None, cur_pos=None)
+        super(DragArea, self).__init__(init_pos=None, cur_pos=None)
 
     @property
     def left_top(self):
@@ -80,7 +80,7 @@ def monitor_area():
     logger.debug('starting thread')
     t = threading.Thread(target=drag_window.mainloop)
     t.start()
-    drag_area = Area()
+    drag_area = DragArea()
     with mouse.Listener(on_click=partial(on_click, drag_area),
                         on_move=partial(on_move, drag_area)) as listener:
         logger.debug('ready')
