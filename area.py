@@ -16,6 +16,11 @@ drag_window.geometry('0x0')
 
 
 class Area(dict):
+    """
+    Class that represents the area dragged by mouse
+    init_pos represents the location of which the mouse was pressed
+    cur_pos represents the location of which the mouse was last seen
+    """
     def __init__(self):
         super(Area, self).__init__(init_pos=None, cur_pos=None)
 
