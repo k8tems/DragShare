@@ -8,6 +8,7 @@ import tkMessageBox
 from tkinter import Tk
 from twython import Twython
 from PIL import ImageGrab
+from quicklock import singleton
 import area
 
 
@@ -44,7 +45,13 @@ def take_screen_shot(bbox):
     return ImageGrab.grab(bbox)
 
 
+def ensure_single_instance():
+    singleton('DragShare')
+
+
 def main():
+    ensure_single_instance()
+
     logging.config.dictConfig(yaml.load(open('log.conf')))
     logger.debug('initiating')
 
