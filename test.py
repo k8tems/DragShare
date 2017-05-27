@@ -1,42 +1,42 @@
 import unittest
-import main
+import area
 
 
 class TestArea(unittest.TestCase):
     def setUp(self):
-        self.area = main.Area()
+        self.area = area.Area()
 
-    def test_press_x_y_less_than_release_x_y(self):
-        self.area['press'] = 10, 10
-        self.area['release'] = 20, 20
+    def test_init_pos_x_y_less_than_cur_pos_x_y(self):
+        self.area['init_pos'] = 10, 10
+        self.area['cur_pos'] = 20, 20
         self.assertEqual((10, 10, 20, 20), self.area.bbox)
         self.assertEqual(10, self.area.width)
         self.assertEqual(10, self.area.height)
 
-    def test_press_y_greater_than_release_y(self):
-        self.area['press'] = 10, 30
-        self.area['release'] = 20, 20
+    def test_init_pos_y_greater_than_cur_pos_y(self):
+        self.area['init_pos'] = 10, 30
+        self.area['cur_pos'] = 20, 20
         self.assertEqual((10, 20, 20, 30), self.area.bbox)
         self.assertEqual(10, self.area.width)
         self.assertEqual(10, self.area.height)
 
-    def test_press_x_greater_than_release_x(self):
-        self.area['press'] = 30, 10
-        self.area['release'] = 20, 20
+    def test_init_pos_x_greater_than_cur_pos_x(self):
+        self.area['init_pos'] = 30, 10
+        self.area['cur_pos'] = 20, 20
         self.assertEqual((20, 10, 30, 20), self.area.bbox)
         self.assertEqual(10, self.area.width)
         self.assertEqual(10, self.area.height)
 
-    def test_press_x_y_greater_than_release_y(self):
-        self.area['press'] = 20, 20
-        self.area['release'] = 10, 10
+    def test_init_pos_x_y_greater_than_cur_pos_y(self):
+        self.area['init_pos'] = 20, 20
+        self.area['cur_pos'] = 10, 10
         self.assertEqual((10, 10, 20, 20), self.area.bbox)
         self.assertEqual(10, self.area.width)
         self.assertEqual(10, self.area.height)
 
-    def test_press_x_y_equal_to_release_x_y(self):
-        self.area['press'] = 10, 10
-        self.area['release'] = 10, 10
+    def test_init_pos_x_y_equal_to_cur_pos_x_y(self):
+        self.area['init_pos'] = 10, 10
+        self.area['cur_pos'] = 10, 10
         self.assertEqual((10, 10, 10, 10), self.area.bbox)
         self.assertEqual(0, self.area.width)
         self.assertEqual(0, self.area.height)
