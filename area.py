@@ -39,8 +39,8 @@ class Area(dict):
         return self.src[0], self.src[1], self.dest[0], self.dest[1]
 
 
-def on_click(area, x, y, button, init_posed):
-    if init_posed:
+def on_click(area, x, y, button, pressed):
+    if pressed:
         area['init_pos'] = x, y
     else:
         area['cur_pos'] = x, y
