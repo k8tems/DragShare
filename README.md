@@ -12,6 +12,7 @@ twython==3.4.0
 pyyaml==3.12
 pillow=4.1.1
 pyinstaller==3.2.1
+quicklock==0.1.7
 ```
 
 ### Required files
@@ -39,6 +40,6 @@ C:\Python27\Scripts\pyinstaller main.py --onefile
 - [x] Select area of screen
 - [x] Visualize area
 - [x] Add early check for settings and warn via message box
-- [ ] Prevent multiple launches
+- [x] Prevent multiple launches
 - [ ] Change cursor when ready
 - [ ] Persist
