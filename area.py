@@ -71,23 +71,35 @@ def on_click(area, x, y, button, pressed):
         return False
 
 
+class MonitorContext(object):
+    def __init__(self):
+        self.t = threading.Thread(target=drag_window.mainloop)
+        self.t.start()
+
+    def __enter__(self):
+        logger.debug('Entering context')
+        return self
+
+    def __exit__(self, *args, **kwargs):
+        logger.debug('Leaving context')
+        drag_window.destroy()
+        self.t.join()
+        return self
+
+
 def monitor_area():
     """
     Monitors and returns the area dragged by mouse
     This method is not thread safe
     :return: Area object representing the area dragged by mouse
     """
-    logger.debug('starting thread')
-    t = threading.Thread(target=drag_window.mainloop)
-    t.start()
-    drag_area = DragArea()
-    with mouse.Listener(on_click=partial(on_click, drag_area),
-                        on_move=partial(on_move, drag_area)) as listener:
-        logger.debug('ready')
-        listener.join()
-    logger.debug('%s %s' % (drag_area['init_pos'], drag_area['cur_pos']))
-    drag_window.destroy()
-    t.join()
+    with MonitorContext():
+        drag_area = DragArea()
+        with mouse.Listener(on_click=partial(on_click, drag_area),
+                            on_move=partial(on_move, drag_area)) as listener:
+            logger.debug('ready')
+            listener.join()
+        logger.debug('%s %s' % (drag_area['init_pos'], drag_area['cur_pos']))
     # wait until the window disappears
     time.sleep(1)
     return drag_area
