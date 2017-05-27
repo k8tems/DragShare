@@ -50,10 +50,10 @@ def ensure_single_instance():
 
 
 def main():
+    logger.info('Initiating')
     ensure_single_instance()
 
     logging.config.dictConfig(yaml.load(open('log.conf')))
-    logger.debug('initiating')
 
     if not os.path.exists(SETTINGS_FILE):
         show_error('%s does not exist' % SETTINGS_FILE)

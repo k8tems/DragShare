@@ -96,10 +96,11 @@ def monitor_area():
     :return: Area object representing the area dragged by mouse
     """
     with MonitorContext():
+        logger.info('Monitoring mouse')
         drag_area = DragArea()
         with mouse.Listener(on_click=partial(on_click, drag_area),
                             on_move=partial(on_move, drag_area)) as listener:
-            logger.debug('ready')
             listener.join()
         logger.debug('%s %s' % (drag_area['init_pos'], drag_area['cur_pos']))
+        logger.info('Finished monitoring mouse')
         return drag_area
