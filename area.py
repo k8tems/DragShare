@@ -44,15 +44,6 @@ class Area(dict):
         return self.width >= 0 and self.height >= 0
 
 
-def on_click(area, x, y, button, pressed):
-    if pressed:
-        area['init_pos'] = x, y
-    else:
-        area['cur_pos'] = x, y
-        # return False to end listener
-        return False
-
-
 def update_geometry(drag_area):
     tk.geometry("+%d+%d" % drag_area.src)
     tk.geometry("%dx%d" % (drag_area.width, drag_area.height))
@@ -63,6 +54,15 @@ def on_move(drag_area, x, y):
         drag_area['cur_pos'] = x, y
         logger.debug('%s %s' % (drag_area['init_pos'], drag_area['cur_pos']))
         update_geometry(drag_area)
+
+
+def on_click(area, x, y, button, pressed):
+    if pressed:
+        area['init_pos'] = x, y
+    else:
+        area['cur_pos'] = x, y
+        # return False to end listener
+        return False
 
 
 def monitor_area():
