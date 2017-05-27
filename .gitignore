@@ -1,7 +1,8 @@
 .idea
 test.png
 settings.yml
-build.bat
+buildd.bat
+buildp.bat
 build
 dist
 main.spec
