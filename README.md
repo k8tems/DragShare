@@ -16,4 +16,6 @@ pyinstaller==3.2.1
 - [x] Select area of screen
 - [x] Visualize area
 - [x] Add early check for settings and warn via message box
+- [ ] Prevent multiple launches
 - [ ] Change cursor when ready
+- [ ] Persist
