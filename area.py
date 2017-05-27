@@ -63,7 +63,7 @@ def on_move(drag_area, x, y):
 def monitor_area():
     """
     Monitors and returns the area dragged by mouse
-    :return: Area object representing the area dragged via mouse
+    :return: Area object representing the area dragged by mouse
     """
     logger.debug('starting thread')
     t = threading.Thread(target=tk.mainloop)
