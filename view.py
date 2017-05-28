@@ -17,7 +17,7 @@ def create_image_view(image, area):
     root = tkinter.Tk()
     root.attributes("-topmost", True)
 
-    root.update()  # windows needs to be shown before calculating the client area offset
+    root.update()  # window needs to be shown before calculating the client area offset
     align_window_with_area(root, area)
 
     canvas = tkinter.Canvas(root)
