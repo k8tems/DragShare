@@ -2,8 +2,8 @@
 
 ### Tested environment
 ```
+windows 10
 python2.7  # can't get compiling to work with py3
-windows10
 ```
 
 ### Required packages
@@ -13,6 +13,7 @@ pyyaml==3.12
 pillow=4.1.1
 pyinstaller==3.2.1
 quicklock==0.1.7
+screeninfo==0.3
 ```
 
 ### Required files
@@ -41,5 +42,6 @@ C:\Python27\Scripts\pyinstaller main.py --onefile
 - [x] Visualize area
 - [x] Add early check for settings and warn via message box
 - [x] Prevent multiple launches
-- [ ] Change cursor when ready
+- [x] Change cursor when ready
+- [ ] Create image confirmation window
 - [ ] Persist
