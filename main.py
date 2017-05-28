@@ -80,11 +80,11 @@ def main():
         return
 
     image = take_screen_shot(a.bbox)
+    image_file_name = generate_temp_file_name()
 
     view.create_image_view(image, a)
 
     # can't get this to work with BytesIO
-    image_file_name = generate_temp_file_name()
     image.save(image_file_name, format='png')
     with open(image_file_name, 'rb') as f:
         share_image(f, args.twitter_settings)
