@@ -2,16 +2,22 @@ import tkinter
 from PIL import ImageTk
 
 
+def align_window_with_area(window, area):
+    """
+    Adjust the geometry so that the client area of the window is
+    aligned with the actual area of the screen shot
+    """
+    x_offset = window.winfo_rootx() - window.winfo_x()
+    y_offset = window.winfo_rooty() - window.winfo_y()
+    window.geometry('+%d+%d' % (area.left - x_offset, area.top - y_offset))
+
+
 def create_image_view(image, area):
     root = tkinter.Tk()
     root.attributes("-topmost", True)
-    root.geometry('%dx%d' % (area.width, area.height))
 
-    # Adjust the geometry so that the client area of the window is aligned with the actual area of the screen shot
     root.update()  # windows needs to be shown before calculating the client area offset
-    x_offset = root.winfo_rootx() - root.winfo_x()
-    y_offset = root.winfo_rooty() - root.winfo_y()
-    root.geometry('+%d+%d' % (area.left - x_offset, area.top - y_offset))
+    align_window_with_area(root, area)
 
     canvas = tkinter.Canvas(root)
     canvas.pack(fill=tkinter.BOTH, expand=tkinter.YES)
