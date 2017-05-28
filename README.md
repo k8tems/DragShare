@@ -45,4 +45,3 @@ C:\Python27\Scripts\pyinstaller main.py
 - [x] Prevent multiple launches
 - [x] Change cursor when ready
 - [ ] Create image confirmation window
-- [ ] Persist
