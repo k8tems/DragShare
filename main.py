@@ -16,8 +16,8 @@ import area
 logger = logging.getLogger()
 
 
-def get_api(settings_file):
-    cfg = yaml.load(open(settings_file, 'rb'))
+def get_api(twitter_settings):
+    cfg = yaml.load(open(twitter_settings, 'rb'))
     return Twython(
         cfg['consumer_key'],
         cfg['consumer_secret'],
@@ -25,8 +25,8 @@ def get_api(settings_file):
         cfg['access_token_secret'])
 
 
-def share_image(image_file, settings_file):
-    api = get_api(settings_file)
+def share_image(image_file, twitter_settings):
+    api = get_api(twitter_settings)
     media_id = api.upload_media(media=image_file)['media_id']
     api.update_status(media_ids=[media_id])
 
@@ -49,14 +49,14 @@ def ensure_single_instance():
     singleton('DragShare')
 
 
-def configure_logging(logging_file):
-    logging.config.dictConfig(yaml.load(open(logging_file)))
+def configure_logging(logging_settings):
+    logging.config.dictConfig(yaml.load(open(logging_settings)))
 
 
 def get_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--settings_file', type=str, default='settings.yml')
-    parser.add_argument('--logging_file', type=str, default='log.conf')
+    parser.add_argument('--twitter_settings', type=str, default='twitter.yml')
+    parser.add_argument('--logging_settings', type=str, default='log.conf')
     return parser.parse_args()
 
 
@@ -64,11 +64,11 @@ def main():
     args = get_args()
 
     ensure_single_instance()
-    configure_logging(args.logging_file)
+    configure_logging(args.logging_settings)
     logger.info('Initiating')
 
-    if not os.path.exists(args.settings_file):
-        show_error('%s does not exist' % args.settings_file)
+    if not os.path.exists(args.twitter_settings):
+        show_error('%s does not exist' % args.twitter_settings)
         return
 
     a = area.monitor_area()
@@ -82,7 +82,7 @@ def main():
     image_file_name = generate_temp_file_name()
     image.save(image_file_name, format='png')
     with open(image_file_name, 'rb') as f:
-        share_image(f, args.settings_file)
+        share_image(f, args.twitter_settings)
 
 
 if __name__ == '__main__':
