@@ -54,9 +54,9 @@ def configure_logging():
 
 
 def main():
-    logger.info('Initiating')
     ensure_single_instance()
     configure_logging()
+    logger.info('Initiating')
 
     if not os.path.exists(SETTINGS_FILE):
         show_error('%s does not exist' % SETTINGS_FILE)
