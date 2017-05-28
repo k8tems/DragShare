@@ -9,3 +9,4 @@ main.spec
 log.conf
 log.txt
 .lock
+logging
