@@ -11,7 +11,7 @@ def create_image_view(image, area):
     root.update()  # windows needs to be shown before calculating the client area offset
     x_offset = root.winfo_rootx() - root.winfo_x()
     y_offset = root.winfo_rooty() - root.winfo_y()
-    root.geometry('+%d+%d' % (area.left_top[0] - x_offset, area.left_top[1] - y_offset))
+    root.geometry('+%d+%d' % (area.left - x_offset, area.top - y_offset))
 
     canvas = tkinter.Canvas(root)
     canvas.pack(fill=tkinter.BOTH, expand=tkinter.YES)

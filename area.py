@@ -19,24 +19,32 @@ class DragArea(dict):
         super(DragArea, self).__init__(init_pos=None, cur_pos=None)
 
     @property
-    def left_top(self):
-        return min(self['init_pos'][0], self['cur_pos'][0]), min(self['init_pos'][1], self['cur_pos'][1])
+    def left(self):
+        return min(self['init_pos'][0], self['cur_pos'][0])
 
     @property
-    def right_bottom(self):
-        return max(self['init_pos'][0], self['cur_pos'][0]), max(self['init_pos'][1], self['cur_pos'][1])
+    def top(self):
+        return min(self['init_pos'][1], self['cur_pos'][1])
+
+    @property
+    def right(self):
+        return max(self['init_pos'][0], self['cur_pos'][0])
+
+    @property
+    def bottom(self):
+        return max(self['init_pos'][1], self['cur_pos'][1])
 
     @property
     def width(self):
-        return self.right_bottom[0] - self.left_top[0]
+        return self.right - self.left
 
     @property
     def height(self):
-        return self.right_bottom[1] - self.left_top[1]
+        return self.bottom - self.top
 
     @property
     def bbox(self):
-        return self.left_top[0], self.left_top[1], self.right_bottom[0], self.right_bottom[1]
+        return self.left, self.top, self.right, self.bottom
 
     @property
     def is_valid(self):
@@ -109,7 +117,7 @@ class DragWindow(Toplevel):
         self.geometry('0x0')
 
     def relocate(self, drag_area):
-        self.geometry("+%d+%d" % drag_area.left_top)
+        self.geometry("+%d+%d" % (drag_area.left, drag_area.top))
         self.geometry("%dx%d" % (drag_area.width, drag_area.height))
 
 
