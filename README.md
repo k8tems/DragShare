@@ -13,7 +13,6 @@ pyyaml==3.12
 pillow=4.1.1
 pyinstaller==3.2.1
 quicklock==0.1.7
-screeninfo==0.3
 ```
 
 ### Required files
