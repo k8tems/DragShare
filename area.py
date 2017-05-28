@@ -89,8 +89,8 @@ class BackWindow(Toplevel):
         self.overrideredirect(1)
         self.attributes('-alpha', 0.01)
         # hide initially
-        # the window should be hidden by using this method instead of setting alpha to 0 to avoid confusion
-        # with the alpha value used to make the window transparent
+        # the window should be hidden by using this method instead of setting alpha to 0 to
+        # avoid confusion with the alpha value used to make the window transparent
         self.geometry('0x0')
 
     def cover_screen(self):
