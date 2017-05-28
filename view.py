@@ -10,6 +10,7 @@ def align_window_with_area(window, area):
     client_x_offset = window.winfo_rootx() - window.winfo_x()
     client_y_offset = window.winfo_rooty() - window.winfo_y()
     window.geometry('+%d+%d' % (area.left - client_x_offset, area.top - client_y_offset))
+    window.geometry('%dx%d' % (area.width, area.height))
 
 
 def create_image_view(image, area):
