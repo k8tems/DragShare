@@ -31,8 +31,9 @@ main.py
 ```
 
 ### Building the app
+Note: building with --onefile option substantially slows down launch
 ```
-C:\Python27\Scripts\pyinstaller main.py --onefile
+C:\Python27\Scripts\pyinstaller main.py
 ```
 
 - [x] Tweet specified image
