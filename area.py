@@ -15,8 +15,8 @@ class DragArea(dict):
     init_pos represents the location of which the mouse was pressed
     cur_pos represents the location of which the mouse was last seen
     """
-    def __init__(self):
-        super(DragArea, self).__init__(init_pos=None, cur_pos=None)
+    def __init__(self, init_pos=None, cur_pos=None):
+        super(DragArea, self).__init__(init_pos=init_pos, cur_pos=cur_pos)
 
     @property
     def left(self):
