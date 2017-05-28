@@ -74,7 +74,7 @@ def main():
     a = area.monitor_area()
 
     if not a.is_valid:
-        show_error('Invalid area ' + str(a))
+        logger.warning('Invalid area ' + str(a))
         return
 
     image = take_screen_shot(a.bbox)
