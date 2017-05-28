@@ -32,6 +32,7 @@ def share_image(image_file, twitter_settings):
 
 
 def show_error(msg):
+    # hide required tkinter root window
     root = Tk()
     root.withdraw()
     tkMessageBox.showerror('Error', msg)
