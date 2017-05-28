@@ -78,9 +78,9 @@ def main():
         logger.warning('Invalid area ' + str(a))
         return
 
-    image_file_name = generate_temp_file_name()
     image = take_screen_shot(a.bbox)
     # can't get this to work with BytesIO
+    image_file_name = generate_temp_file_name()
     image.save(image_file_name, format='png')
     with open(image_file_name, 'rb') as f:
         share_image(f, args.twitter_settings)
