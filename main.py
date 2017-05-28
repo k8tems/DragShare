@@ -4,6 +4,7 @@ import tempfile
 import yaml
 import logging
 import logging.config
+import argparse
 import tkMessageBox
 from tkinter import Tk
 from twython import Twython
@@ -12,12 +13,11 @@ from quicklock import singleton
 import area
 
 
-SETTINGS_FILE = 'settings.yml'
 logger = logging.getLogger()
 
 
-def get_api():
-    cfg = yaml.load(open(SETTINGS_FILE, 'rb'))
+def get_api(settings_file):
+    cfg = yaml.load(open(settings_file, 'rb'))
     return Twython(
         cfg['consumer_key'],
         cfg['consumer_secret'],
@@ -25,8 +25,8 @@ def get_api():
         cfg['access_token_secret'])
 
 
-def share_image(image_file):
-    api = get_api()
+def share_image(image_file, settings_file):
+    api = get_api(settings_file)
     media_id = api.upload_media(media=image_file)['media_id']
     api.update_status(media_ids=[media_id])
 
@@ -53,13 +53,21 @@ def configure_logging():
     logging.config.dictConfig(yaml.load(open('log.conf')))
 
 
+def get_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--settings_file', type=str, default='settings.yml')
+    return parser.parse_args()
+
+
 def main():
+    args = get_args()
+
     ensure_single_instance()
     configure_logging()
     logger.info('Initiating')
 
-    if not os.path.exists(SETTINGS_FILE):
-        show_error('%s does not exist' % SETTINGS_FILE)
+    if not os.path.exists(args.settings_file):
+        show_error('%s does not exist' % args.settings_file)
         return
 
     a = area.monitor_area()
@@ -73,7 +81,7 @@ def main():
     image_file_name = generate_temp_file_name()
     image.save(image_file_name, format='png')
     with open(image_file_name, 'rb') as f:
-        share_image(f)
+        share_image(f, args.settings_file)
 
 
 if __name__ == '__main__':
