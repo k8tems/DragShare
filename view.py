@@ -7,9 +7,9 @@ def align_window_with_area(window, area):
     Adjust the geometry so that the client area of the window is
     aligned with the actual area of the screen shot
     """
-    x_offset = window.winfo_rootx() - window.winfo_x()
-    y_offset = window.winfo_rooty() - window.winfo_y()
-    window.geometry('+%d+%d' % (area.left - x_offset, area.top - y_offset))
+    client_x_offset = window.winfo_rootx() - window.winfo_x()
+    client_y_offset = window.winfo_rooty() - window.winfo_y()
+    window.geometry('+%d+%d' % (area.left - client_x_offset, area.top - client_y_offset))
 
 
 def create_image_view(image, area):
