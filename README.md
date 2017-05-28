@@ -13,10 +13,11 @@ pyyaml==3.12
 pillow=4.1.1
 pyinstaller==3.2.1
 quicklock==0.1.7
+clipboard=0.0.4
 ```
 
 ### Required files
-`twitter.yml` taking the following format
+`twitter.yml` containing api credentials for twitter account
 ```
 consumer_key: 'consumer_key'
 consumer_secret: 'consumer_secret'
@@ -43,4 +44,4 @@ C:\Python27\Scripts\pyinstaller main.py
 - [x] Add early check for settings and warn via message box
 - [x] Prevent multiple launches
 - [x] Change cursor when ready
-- [ ] Create image confirmation window
+- [x] Create image confirmation window

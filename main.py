@@ -5,6 +5,7 @@ import yaml
 import logging
 import logging.config
 import argparse
+from functools import partial
 import tkMessageBox
 from tkinter import Tk
 from twython import Twython
@@ -26,10 +27,12 @@ def get_api(twitter_settings):
         cfg['access_token_secret'])
 
 
-def share_image(image_file, twitter_settings):
+def upload_image(image_file, twitter_settings):
+    """Upload image to dummy account"""
     api = get_api(twitter_settings)
     media_id = api.upload_media(media=image_file)['media_id']
-    api.update_status(media_ids=[media_id])
+    resp = api.update_status(media_ids=[media_id])
+    return resp['entities']['media'][0]['display_url']
 
 
 def show_error(msg):
@@ -81,13 +84,11 @@ def main():
 
     image = take_screen_shot(a.bbox)
     image_file_name = generate_temp_file_name()
-
-    view.create_image_view(image, a)
-
     # can't get this to work with BytesIO
     image.save(image_file_name, format='png')
     with open(image_file_name, 'rb') as f:
-        share_image(f, args.twitter_settings)
+        upload_to_twitter = partial(upload_image, f, args.twitter_settings)
+        view.create_image_view(image, a, upload_to_twitter)
 
 
 if __name__ == '__main__':
