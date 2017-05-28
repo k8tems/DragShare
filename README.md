@@ -17,7 +17,7 @@ screeninfo==0.3
 ```
 
 ### Required files
-`settings.yml` taking the following format
+`twitter.yml` taking the following format
 ```
 consumer_key: 'consumer_key'
 consumer_secret: 'consumer_secret'
