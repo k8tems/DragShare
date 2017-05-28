@@ -49,13 +49,14 @@ def ensure_single_instance():
     singleton('DragShare')
 
 
-def configure_logging():
-    logging.config.dictConfig(yaml.load(open('log.conf')))
+def configure_logging(logging_file):
+    logging.config.dictConfig(yaml.load(open(logging_file)))
 
 
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--settings_file', type=str, default='settings.yml')
+    parser.add_argument('--logging_file', type=str, default='log.conf')
     return parser.parse_args()
 
 
@@ -63,7 +64,7 @@ def main():
     args = get_args()
 
     ensure_single_instance()
-    configure_logging()
+    configure_logging(args.logging_file)
     logger.info('Initiating')
 
     if not os.path.exists(args.settings_file):
