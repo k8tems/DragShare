@@ -10,3 +10,4 @@ log.conf
 log.txt
 .lock
 logging
+logs
