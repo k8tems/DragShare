@@ -65,12 +65,6 @@ class BackWindow(Toplevel):
         Toplevel.__init__(self, parent, cursor='cross')
         self.overrideredirect(1)
         self.attributes('-alpha', 0.01)
-        # hide initially
-        # setting alpha to 0 will also hide the window but to avoid confusion,
-        # it's better to just stick with geometry
-        self.geometry('0x0')
-
-    def cover_screen(self):
         self.geometry('+0+0')
         resolution = get_screen_resolution()
         logger.info('resolution %dx%d' % resolution)
@@ -117,7 +111,6 @@ def create_windows(drag_area):
     root = RootWindow()
     drag_window = DragWindow(root, drag_area)
     back_window = BackWindow(root)
-    back_window.cover_screen()
     back_window.bind(event.MOUSE_MOVE, drag_window.on_back_motion)
     back_window.bind(event.LEFT_PRESS, drag_window.on_back_press)
     back_window.bind(event.RIGHT_PRESS, root.on_finish)
