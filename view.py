@@ -28,4 +28,4 @@ def setup_image_view(root, image, area):
     menu = tkinter.Menu(root, tearoff=0)
     menu.add_command(label='Upload to twitter',
                      command=lambda: root.event_generate(event.TWITTER_UPLOAD, when='tail'))
-    root.bind(event.RIGHT_CLICK, lambda event: menu.post(event.x_root, event.y_root))
+    root.bind(event.RIGHT_PRESS, lambda event: menu.post(event.x_root, event.y_root))

@@ -1,5 +1,5 @@
-RIGHT_CLICK = '<Button-3>'
+MOUSE_MOVE = '<Motion>'
 LEFT_PRESS = '<Button-1>'
 LEFT_RELEASE = '<ButtonRelease-1>'
+RIGHT_PRESS = '<Button-3>'
 TWITTER_UPLOAD = '<<Twitter-Upload>>'
-MOUSE_MOVE = '<Motion>'
