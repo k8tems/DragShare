@@ -15,6 +15,7 @@ from PIL import ImageGrab, ImageTk
 from quicklock import singleton
 import area
 import view
+import event
 
 
 logger = logging.getLogger()
@@ -102,7 +103,7 @@ def main():
         # also has to persist in a variable while the event loop is running
         image = ImageTk.PhotoImage(image)
         view.setup_image_view(image_view, image, a)
-        image_view.bind('<<Twitter-Upload>>', partial(on_twitter_upload, f, args.twitter_settings))
+        image_view.bind(event.TWITTER_UPLOAD, partial(on_twitter_upload, f, args.twitter_settings))
         image_view.mainloop()
 
 

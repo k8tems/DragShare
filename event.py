@@ -1,0 +1,5 @@
+RIGHT_CLICK = '<Button-3>'
+LEFT_PRESS = '<Button-1>'
+LEFT_RELEASE = '<ButtonRelease-1>'
+TWITTER_UPLOAD = '<<Twitter-Upload>>'
+MOUSE_MOVE = '<Motion>'

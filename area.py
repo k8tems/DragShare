@@ -1,5 +1,6 @@
 import logging
 from Tkinter import Tk, Toplevel
+import event
 
 
 logger = logging.getLogger()
@@ -105,10 +106,10 @@ def create_windows(drag_area):
     drag_window = DragWindow(root, drag_area)
     back_window = BackWindow(root)
     back_window.cover_screen()
-    back_window.bind('<Motion>', drag_window.on_back_motion)
-    back_window.bind('<Button-1>', drag_window.on_back_press)
-    back_window.bind('<Button-3>', root.on_finish)
-    back_window.bind('<ButtonRelease-1>', root.on_finish)
+    back_window.bind(event.MOUSE_MOVE, drag_window.on_back_motion)
+    back_window.bind(event.LEFT_PRESS, drag_window.on_back_press)
+    back_window.bind(event.RIGHT_CLICK, root.on_finish)
+    back_window.bind(event.LEFT_RELEASE, root.on_finish)
     return root
 
 

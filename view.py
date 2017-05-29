@@ -1,7 +1,5 @@
 import tkinter
-
-
-RIGHT_CLICK = '<Button-3>'
+import event
 
 
 def align_window_with_area(window, area):
@@ -29,5 +27,5 @@ def setup_image_view(root, image, area):
 
     menu = tkinter.Menu(root, tearoff=0)
     menu.add_command(label='Upload to twitter',
-                     command=lambda: root.event_generate('<<Twitter-Upload>>', when='tail'))
-    root.bind(RIGHT_CLICK, lambda event: menu.post(event.x_root, event.y_root))
+                     command=lambda: root.event_generate(event.TWITTER_UPLOAD, when='tail'))
+    root.bind(event.RIGHT_CLICK, lambda event: menu.post(event.x_root, event.y_root))
