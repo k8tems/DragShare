@@ -61,13 +61,27 @@ def generate_temp_file_name():
     return os.path.join(tempfile.gettempdir(), str(uuid.uuid4()))
 
 
+class ImageFileContext(object):
+    """
+    Context that takes an image, saves it as a temp file and returns the file object
+    It'd be better if I could just derive a BytesIO object from `image` but I can't get it to upload
+    """
+    def __init__(self, image):
+        image_file_name = generate_temp_file_name()
+        image.save(image_file_name, format='png')
+        self.image_file = open(image_file_name, 'rb')
+
+    def __enter__(self):
+        return self.image_file
+
+    def __exit__(self, *args, **kwargs):
+        return self.image_file.close()
+
+
 def upload_image(image, twitter_settings):
-    """Upload image to dummy account"""
+    """Upload image to twitter account"""
     api = get_api(twitter_settings)
-    # It'd be better if I could just derive a BytesIO object from `image` and upload it but I can't get it to work
-    image_file_name = generate_temp_file_name()
-    image.save(image_file_name, format='png')
-    with open(image_file_name, 'rb') as image_file:
+    with ImageFileContext(image) as image_file:
         media_id = api.upload_media(media=image_file)['media_id']
     resp = api.update_status(media_ids=[media_id])
     return resp['entities']['media'][0]['display_url']
