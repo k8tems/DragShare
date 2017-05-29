@@ -33,6 +33,7 @@ def get_api(twitter_settings):
 def upload_image(image_file, twitter_settings):
     """Upload image to dummy account"""
     api = get_api(twitter_settings)
+    # It'd be better if I could just upload a BytesIO object but I can't get it to work
     media_id = api.upload_media(media=image_file)['media_id']
     resp = api.update_status(media_ids=[media_id])
     return resp['entities']['media'][0]['display_url']
@@ -68,9 +69,20 @@ def get_args():
     return parser.parse_args()
 
 
-def on_twitter_upload(image_file, twitter_settings, _):
+def on_twitter_upload(image_file_name, twitter_settings, _):
     logger.info('on_twitter_upload')
-    clipboard.copy(upload_image(image_file, twitter_settings))
+    with open(image_file_name, 'rb') as f:
+        clipboard.copy(upload_image(f, twitter_settings))
+
+
+def run_image_view(image_file_name, a, twitter_settings):
+    image_view = Tk()
+    # `PhotoImage` has to be instantiated after the root object and
+    # also has to persist in a variable while the event loop is running
+    tkimage = ImageTk.PhotoImage(file=image_file_name)
+    view.setup_image_view(image_view, tkimage, a)
+    image_view.bind(event.TWITTER_UPLOAD, partial(on_twitter_upload, image_file_name, twitter_settings))
+    image_view.mainloop()
 
 
 def main():
@@ -95,16 +107,8 @@ def main():
 
     image = take_screen_shot(a.bbox)
     image_file_name = generate_temp_file_name()
-    # can't get this to work with BytesIO
     image.save(image_file_name, format='png')
-    with open(image_file_name, 'rb') as f:
-        image_view = Tk()
-        # `PhotoImage` has to be instantiated after the root object and
-        # also has to persist in a variable while the event loop is running
-        image = ImageTk.PhotoImage(image)
-        view.setup_image_view(image_view, image, a)
-        image_view.bind(event.TWITTER_UPLOAD, partial(on_twitter_upload, f, args.twitter_settings))
-        image_view.mainloop()
+    run_image_view(image_file_name, a, args.twitter_settings)
 
 
 if __name__ == '__main__':
