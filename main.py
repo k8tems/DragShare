@@ -10,13 +10,13 @@ import tkMessageBox
 from ctypes import windll
 from tkinter import Tk
 import clipboard
+from desktopmagic.screengrab_win32 import getRectAsImage
 from twython import Twython
-from PIL import ImageGrab, ImageTk
+from PIL import ImageTk
 from quicklock import singleton
 import drag
 import view
 import event
-
 
 logger = logging.getLogger()
 
@@ -54,7 +54,8 @@ def show_error(msg):
 
 
 def take_screen_shot(bbox):
-    return ImageGrab.grab(bbox)
+    # `PIL.ImageGrab` does not support multi monitor environments
+    return getRectAsImage(bbox)
 
 
 def generate_temp_file_name():
