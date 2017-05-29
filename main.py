@@ -7,6 +7,7 @@ import logging.config
 import argparse
 from functools import partial
 import tkMessageBox
+from ctypes import windll
 from tkinter import Tk
 from twython import Twython
 from PIL import ImageGrab
@@ -71,6 +72,9 @@ def main():
     ensure_single_instance()
     configure_logging(args.logging_settings)
     logger.info('Initiating')
+
+    # this is required if the screen is scaled
+    windll.user32.SetProcessDPIAware()
 
     if not os.path.exists(args.twitter_settings):
         show_error('%s does not exist' % args.twitter_settings)
