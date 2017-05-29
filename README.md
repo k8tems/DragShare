@@ -46,3 +46,4 @@ C:\Python27\Scripts\pyinstaller main.py
 - [x] Change cursor when ready
 - [x] Create image confirmation window
 - [ ] Support multi monitor environment
+- [ ] Somehow notify the user after the upload has been finished
