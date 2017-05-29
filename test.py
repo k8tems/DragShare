@@ -1,10 +1,10 @@
 import unittest
-import area
+import drag
 
 
 class TestArea(unittest.TestCase):
     def create_area(self, *args, **kwargs):
-        return area.DragArea(*args, **kwargs)
+        return drag.DragArea(*args, **kwargs)
 
     def test_init_pos_x_y_less_than_cur_pos_x_y(self):
         drag_area = self.create_area((10, 10), (20, 20))

@@ -113,7 +113,7 @@ def create_windows(drag_area):
     return root
 
 
-def monitor_area():
+def monitor_drag():
     """
     Monitors and returns the area dragged by mouse
     :return: Area object representing the area dragged by mouse

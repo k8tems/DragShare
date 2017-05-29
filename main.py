@@ -13,7 +13,7 @@ import clipboard
 from twython import Twython
 from PIL import ImageGrab, ImageTk
 from quicklock import singleton
-import area
+import drag
 import view
 import event
 
@@ -78,12 +78,12 @@ def on_twitter_upload(image_file, twitter_settings, _):
     clipboard.copy(upload_image(image_file, twitter_settings))
 
 
-def run_image_view(image, a, twitter_settings):
+def run_image_view(image, area, twitter_settings):
     image_view = Tk()
     # `PhotoImage` has to be instantiated after the root object and
     # also has to persist in a variable while the event loop is running
     tkimage = ImageTk.PhotoImage(image)
-    view.setup_image_view(image_view, tkimage, a)
+    view.setup_image_view(image_view, tkimage, area)
     image_view.bind(event.TWITTER_UPLOAD, partial(on_twitter_upload, image, twitter_settings))
     image_view.mainloop()
 
@@ -102,14 +102,14 @@ def main():
         show_error('%s does not exist' % args.twitter_settings)
         return
 
-    a = area.monitor_area()
+    area = drag.monitor_drag()
 
-    if not a.is_valid:
-        logger.warning('Invalid area ' + str(a))
+    if not area.is_valid:
+        logger.warning('Invalid area ' + str(area))
         return
 
-    image = take_screen_shot(a.bbox)
-    run_image_view(image, a, args.twitter_settings)
+    image = take_screen_shot(area.bbox)
+    run_image_view(image, area, args.twitter_settings)
 
 
 if __name__ == '__main__':
