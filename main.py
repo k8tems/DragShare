@@ -33,7 +33,7 @@ def get_api(twitter_settings):
 def upload_image(image, twitter_settings):
     """Upload image to dummy account"""
     api = get_api(twitter_settings)
-    # It'd be better if I could just upload a BytesIO object but I can't get it to work
+    # It'd be better if I could just derive a BytesIO object from `image` and upload it but I can't get it to work
     image_file_name = generate_temp_file_name()
     image.save(image_file_name, format='png')
     with open(image_file_name, 'rb') as image_file:
