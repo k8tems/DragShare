@@ -21,6 +21,21 @@ import event
 logger = logging.getLogger()
 
 
+def get_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--twitter_settings', type=str, default='twitter.yml')
+    parser.add_argument('--logging_settings', type=str, default='log.conf')
+    return parser.parse_args()
+
+
+def ensure_single_instance():
+    singleton('DragShare')
+
+
+def configure_logging(logging_settings):
+    logging.config.dictConfig(yaml.load(open(logging_settings)))
+
+
 def get_api(twitter_settings):
     cfg = yaml.load(open(twitter_settings, 'rb'))
     return Twython(
@@ -28,6 +43,22 @@ def get_api(twitter_settings):
         cfg['consumer_secret'],
         cfg['access_token_key'],
         cfg['access_token_secret'])
+
+
+def show_error(msg):
+    # hide required tkinter root window
+    # is it an anti-pattern to instantiate multiple root objects within the application lifetime??
+    root = Tk()
+    root.withdraw()
+    tkMessageBox.showerror('Error', msg)
+
+
+def take_screen_shot(bbox):
+    return ImageGrab.grab(bbox)
+
+
+def generate_temp_file_name():
+    return os.path.join(tempfile.gettempdir(), str(uuid.uuid4()))
 
 
 def upload_image(image, twitter_settings):
@@ -40,37 +71,6 @@ def upload_image(image, twitter_settings):
         media_id = api.upload_media(media=image_file)['media_id']
     resp = api.update_status(media_ids=[media_id])
     return resp['entities']['media'][0]['display_url']
-
-
-def show_error(msg):
-    # hide required tkinter root window
-    # is it an anti-pattern to instantiate multiple root objects within the application lifetime??
-    root = Tk()
-    root.withdraw()
-    tkMessageBox.showerror('Error', msg)
-
-
-def generate_temp_file_name():
-    return os.path.join(tempfile.gettempdir(), str(uuid.uuid4()))
-
-
-def take_screen_shot(bbox):
-    return ImageGrab.grab(bbox)
-
-
-def ensure_single_instance():
-    singleton('DragShare')
-
-
-def configure_logging(logging_settings):
-    logging.config.dictConfig(yaml.load(open(logging_settings)))
-
-
-def get_args():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--twitter_settings', type=str, default='twitter.yml')
-    parser.add_argument('--logging_settings', type=str, default='log.conf')
-    return parser.parse_args()
 
 
 def on_twitter_upload(image_file, twitter_settings, _):
