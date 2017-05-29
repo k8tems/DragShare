@@ -1,5 +1,6 @@
 import logging
 from Tkinter import Tk, Toplevel
+import screeninfo
 import event
 
 
@@ -48,6 +49,17 @@ class DragArea(dict):
         return self.width > 0 and self.height > 0
 
 
+def get_screen_resolution():
+    """Get total screen resolution of all monitors"""
+    monitors = screeninfo.get_monitors()
+    width = 0
+    height = 0
+    for m in monitors:
+        width += m.width
+        height += m.height
+    return width, height
+
+
 class BackWindow(Toplevel):
     def __init__(self, parent):
         Toplevel.__init__(self, parent, cursor='cross')
@@ -60,7 +72,7 @@ class BackWindow(Toplevel):
 
     def cover_screen(self):
         self.geometry('+0+0')
-        resolution = (self.winfo_screenwidth(), self.winfo_screenheight())
+        resolution = get_screen_resolution()
         logger.info('resolution %dx%d' % resolution)
         self.geometry('%dx%d' % resolution)
 
