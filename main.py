@@ -99,7 +99,7 @@ def main():
     image.save(image_file_name, format='png')
     with open(image_file_name, 'rb') as f:
         image_view = Tk()
-        # has to be instantiated after the root object and
+        # `PhotoImage` has to be instantiated after the root object and
         # also has to persist in a variable while the event loop is running
         image = ImageTk.PhotoImage(image)
         view.setup_image_view(image_view, image, a)
