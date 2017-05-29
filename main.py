@@ -9,8 +9,9 @@ from functools import partial
 import tkMessageBox
 from ctypes import windll
 from tkinter import Tk
+import clipboard
 from twython import Twython
-from PIL import ImageGrab
+from PIL import ImageGrab, ImageTk
 from quicklock import singleton
 import area
 import view
@@ -66,6 +67,11 @@ def get_args():
     return parser.parse_args()
 
 
+def on_twitter_upload(image_file, twitter_settings, _):
+    logger.info('on_twitter_upload')
+    clipboard.copy(upload_image(image_file, twitter_settings))
+
+
 def main():
     args = get_args()
 
@@ -91,8 +97,13 @@ def main():
     # can't get this to work with BytesIO
     image.save(image_file_name, format='png')
     with open(image_file_name, 'rb') as f:
-        upload_to_twitter = partial(upload_image, f, args.twitter_settings)
-        view.create_image_view(image, a, upload_to_twitter)
+        image_view = Tk()
+        # has to be instantiated after the root object and
+        # also has to persist in a variable while the event loop is running
+        image = ImageTk.PhotoImage(image)
+        view.setup_image_view(image_view, image, a)
+        image_view.bind('<<Twitter-Upload>>', partial(on_twitter_upload, f, args.twitter_settings))
+        image_view.mainloop()
 
 
 if __name__ == '__main__':

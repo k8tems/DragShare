@@ -1,6 +1,4 @@
 import tkinter
-from PIL import ImageTk
-import clipboard
 
 
 RIGHT_CLICK = '<Button-3>'
@@ -17,8 +15,7 @@ def align_window_with_area(window, area):
     window.geometry('%dx%d' % (area.width, area.height))
 
 
-def create_image_view(image, area, upload_to_twitter):
-    root = tkinter.Tk()
+def setup_image_view(root, image, area):
     root.attributes('-topmost', True)
 
     root.update()  # window needs to be shown before calculating the client area offset
@@ -28,15 +25,9 @@ def create_image_view(image, area, upload_to_twitter):
     canvas.pack(fill=tkinter.BOTH, expand=tkinter.YES)
 
     # has to be stored in a variable
-    photo = ImageTk.PhotoImage(image)
-    canvas.create_image(0, 0, anchor='nw', image=photo)
-
-    def copy_image_url():
-        clipboard.copy(upload_to_twitter())
+    canvas.create_image(0, 0, anchor='nw', image=image)
 
     menu = tkinter.Menu(root, tearoff=0)
-    menu.add_command(label='Upload to twitter', command=copy_image_url)
-
+    menu.add_command(label='Upload to twitter',
+                     command=lambda: root.event_generate('<<Twitter-Upload>>', when='tail'))
     root.bind(RIGHT_CLICK, lambda event: menu.post(event.x_root, event.y_root))
-
-    root.mainloop()
