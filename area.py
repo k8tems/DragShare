@@ -1,9 +1,5 @@
-import time
 import logging
-from functools import partial
-import threading
 from Tkinter import Tk, Toplevel
-from pynput import mouse
 
 
 logger = logging.getLogger()
@@ -51,46 +47,6 @@ class DragArea(dict):
         return self.width > 0 and self.height > 0
 
 
-def on_move(drag_window, drag_area, x, y):
-    # make sure the mouse has been pressed
-    if drag_area['init_pos']:
-        drag_area['cur_pos'] = x, y
-        logger.debug('%s %s' % (drag_area['init_pos'], drag_area['cur_pos']))
-        drag_window.relocate(drag_area)
-
-
-def on_click(area, x, y, button, pressed):
-    if pressed:
-        area['init_pos'] = x, y
-    else:
-        area['cur_pos'] = x, y
-        # return False to end listener
-        return False
-
-
-class MonitorContext(object):
-    def __init__(self, tkinter):
-        self.tkinter = tkinter
-        # needs to start after all the windows have been created
-        self.thread = threading.Thread(target=tkinter.mainloop)
-        self.thread.start()
-
-    def __enter__(self):
-        logger.debug('Entering context')
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        logger.debug('Leaving context')
-        self.tkinter.destroy()
-        self.thread.join()
-        if exc_val:
-            raise exc_val
-        # wait until the drag window disappears so that it doesn't interfere with the screenshot
-        # apparently, this is the only place I can do this
-        time.sleep(1)
-        return self
-
-
 class BackWindow(Toplevel):
     def __init__(self, parent):
         Toplevel.__init__(self, parent, cursor='cross')
@@ -109,16 +65,27 @@ class BackWindow(Toplevel):
 
 
 class DragWindow(Toplevel):
-    def __init__(self, parent):
+    def __init__(self, parent, drag_area):
         Toplevel.__init__(self, parent)
         self.attributes('-alpha', 0.7)
         self.overrideredirect(1)
         # hide window(had problems with `deiconify()`)
         self.geometry('0x0')
+        self.drag_area = drag_area
 
     def relocate(self, drag_area):
         self.geometry("+%d+%d" % (drag_area.left, drag_area.top))
         self.geometry("%dx%d" % (drag_area.width, drag_area.height))
+
+    def on_back_motion(self, event):
+        # make sure the mouse has been pressed
+        if self.drag_area['init_pos']:
+            self.drag_area['cur_pos'] = event.x, event.y
+            logger.debug('%s %s' % (self.drag_area['init_pos'], self.drag_area['cur_pos']))
+            self.relocate(self.drag_area)
+
+    def on_back_press(self, event):
+        self.drag_area['init_pos'] = event.x, event.y
 
 
 class RootWindow(Tk):
@@ -129,25 +96,30 @@ class RootWindow(Tk):
         # so this has to be called in addition to completely hide the window
         self.overrideredirect(1)
 
+    def on_finish(self, _):
+        self.destroy()
+
+
+def create_windows(drag_area):
+    root = RootWindow()
+    drag_window = DragWindow(root, drag_area)
+    back_window = BackWindow(root)
+    back_window.cover_screen()
+    back_window.bind('<Motion>', drag_window.on_back_motion)
+    back_window.bind('<Button-1>', drag_window.on_back_press)
+    back_window.bind('<Button-3>', root.on_finish)
+    back_window.bind('<ButtonRelease-1>', root.on_finish)
+    return root
+
 
 def monitor_area():
     """
     Monitors and returns the area dragged by mouse
     :return: Area object representing the area dragged by mouse
     """
-    root = RootWindow()
-    back_window = BackWindow(root)
-    drag_window = DragWindow(root)
-    # No windows are visible at this point so everything should be fine if something happens pre-context
-    with MonitorContext(root):
-        # resize the background window post-context
-        # so that proper clean up is done in case something happens
-        back_window.cover_screen()
-        logger.info('Monitoring mouse')
-        drag_area = DragArea()
-        with mouse.Listener(on_click=partial(on_click, drag_area),
-                            on_move=partial(on_move, drag_window, drag_area)) as listener:
-            listener.join()
-        logger.debug('%s %s' % (drag_area['init_pos'], drag_area['cur_pos']))
-        logger.info('Finished monitoring mouse')
-        return drag_area
+    drag_area = DragArea()
+    root = create_windows(drag_area)
+    logger.info('Monitoring mouse')
+    root.mainloop()
+    logger.info('Finished monitoring mouse')
+    return drag_area
