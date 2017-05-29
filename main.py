@@ -73,9 +73,9 @@ def upload_image(image, twitter_settings):
     return resp['entities']['media'][0]['display_url']
 
 
-def on_twitter_upload(image_file, twitter_settings, _):
+def on_twitter_upload(image, twitter_settings, _):
     logger.info('on_twitter_upload')
-    clipboard.copy(upload_image(image_file, twitter_settings))
+    clipboard.copy(upload_image(image, twitter_settings))
 
 
 def run_image_view(image, area, twitter_settings):
