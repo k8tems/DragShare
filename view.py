@@ -86,7 +86,7 @@ class ImageUrlRetriever(HiddenWindow):
         self.event_generate(event.TWITTER_UPLOAD_FINISHED, when='tail')
 
 
-def birange(start, end, step):
+def generate_flashing_sequence(start, end, step):
     """Generate a sequence of brightness values that represent a flashing effect"""
     result = []
     i = start
@@ -117,7 +117,7 @@ class Animation(object):
 
 def generate_flashing_animation(image):
     delay = 10
-    brightnesses = birange(1, 3, 0.2)
+    brightnesses = generate_flashing_sequence(1, 3, 0.2)
     frames = []
     for b in brightnesses:
         f = ImageEnhance.Brightness(image.copy()).enhance(b)

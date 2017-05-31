@@ -13,7 +13,7 @@ class TestAnimation(unittest.TestCase):
 
 class TestBirange(unittest.TestCase):
     def test(self):
-        self.assertEqual([1.0, 1.5, 2.0, 1.5, 1.0], view.birange(1.0, 2.0, 0.5))
+        self.assertEqual([1.0, 1.5, 2.0, 1.5, 1.0], view.generate_flashing_sequence(1.0, 2.0, 0.5))
 
 
 class TestArea(unittest.TestCase):
