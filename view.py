@@ -4,14 +4,27 @@ import uuid
 import logging
 from Tkinter import Toplevel, Tk
 import tkinter
+from StringIO import StringIO
+import clipboard
+import win32clipboard
 import yaml
 from twython import Twython
 from PIL import ImageTk, ImageEnhance
 import event
-import clipboard
 
 
 logger = logging.getLogger()
+
+
+def send_image_to_clipboard(img):
+    output = StringIO()
+    img.convert('RGB').save(output, 'BMP')
+    data = output.getvalue()[14:]
+    output.close()
+    win32clipboard.OpenClipboard()
+    win32clipboard.EmptyClipboard()
+    win32clipboard.SetClipboardData(win32clipboard.CF_DIB, data)
+    win32clipboard.CloseClipboard()
 
 
 def align_window_with_area(window, area):
@@ -76,7 +89,7 @@ class TwitterUploader(HiddenWindow):
         resp = api.update_status(media_ids=[media_id])
         return resp['entities']['media'][0]['display_url']
 
-    def on_upload_request(self, _):
+    def on_upload_request(self):
         logger.info('Got upload request')
         image_url = self.upload_image()
         logging.info('image_url ' + image_url)
@@ -160,11 +173,10 @@ def run_image_view(image, area, twitter_settings):
     align_window_with_area(image_view, area)
     animation = generate_flashing_animation(image)
     canvas = ScreenshotCanvas(image_view, image, animation)
-    menu = tkinter.Menu(image_view, tearoff=0)
-    menu.add_command(label='Upload to twitter',
-                     command=lambda: image_view.event_generate(event.TWITTER_UPLOAD_REQUEST, when='tail'))
-    image_view.bind(event.RIGHT_PRESS, lambda e: menu.post(e.x_root, e.y_root))
     url_retriever = TwitterUploader(image_view, image, twitter_settings)
     url_retriever.bind(event.TWITTER_UPLOAD_FINISHED, canvas.on_twitter_upload_finished)
-    image_view.bind(event.TWITTER_UPLOAD_REQUEST, url_retriever.on_upload_request)
+    menu = tkinter.Menu(image_view, tearoff=0)
+    menu.add_command(label='Copy', command=lambda: send_image_to_clipboard(image))
+    menu.add_command(label='Upload to twitter', command=url_retriever.on_upload_request)
+    image_view.bind(event.RIGHT_PRESS, lambda e: menu.post(e.x_root, e.y_root))
     image_view.mainloop()
