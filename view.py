@@ -118,10 +118,7 @@ class Animation(object):
 def generate_flashing_animation(image):
     delay = 10
     brightnesses = generate_flashing_sequence(1, 3, 0.2)
-    frames = []
-    for b in brightnesses:
-        f = ImageEnhance.Brightness(image.copy()).enhance(b)
-        frames.append(f)
+    frames = [ImageEnhance.Brightness(image.copy()).enhance(b) for b in brightnesses]
     return Animation(frames, delay)
 
 
