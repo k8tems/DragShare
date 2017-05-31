@@ -62,7 +62,7 @@ class HiddenWindow(Toplevel):
 
 
 # Has to be `Toplevel`; Any event emitted by `Frame` is ignored
-class ImageUrlRetriever(HiddenWindow):
+class TwitterUploader(HiddenWindow):
     def __init__(self, parent, image, twitter_settings):
         HiddenWindow.__init__(self, parent)
         self.image = image
@@ -164,7 +164,7 @@ def run_image_view(image, area, twitter_settings):
     menu.add_command(label='Upload to twitter',
                      command=lambda: image_view.event_generate(event.TWITTER_UPLOAD_REQUEST, when='tail'))
     image_view.bind(event.RIGHT_PRESS, lambda e: menu.post(e.x_root, e.y_root))
-    url_retriever = ImageUrlRetriever(image_view, image, twitter_settings)
+    url_retriever = TwitterUploader(image_view, image, twitter_settings)
     url_retriever.bind(event.TWITTER_UPLOAD_FINISHED, canvas.on_twitter_upload_finished)
     image_view.bind(event.TWITTER_UPLOAD_REQUEST, url_retriever.on_upload_request)
     image_view.mainloop()
