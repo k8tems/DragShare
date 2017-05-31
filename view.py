@@ -86,20 +86,6 @@ class ImageUrlRetriever(HiddenWindow):
         self.event_generate(event.TWITTER_UPLOAD_FINISHED, when='tail')
 
 
-def generate_flashing_sequence(start, end, step):
-    """Generate a sequence of brightness values that represent a flashing effect"""
-    result = []
-    i = start
-    while i <= end:
-        result.append(i)
-        i += step
-    i = end
-    while i > start:
-        i -= step
-        result.append(i)
-    return result
-
-
 class Animation(object):
     """Workaround for `iter` function that doesn't allow custom attributes"""
     def __init__(self, frames, delay):
@@ -113,6 +99,20 @@ class Animation(object):
         result = self.frames[self.idx]
         self.idx += 1
         return result
+
+
+def generate_flashing_sequence(start, end, step):
+    """Generate a sequence of brightness values that represent a flashing effect"""
+    result = []
+    i = start
+    while i <= end:
+        result.append(i)
+        i += step
+    i = end
+    while i > start:
+        i -= step
+        result.append(i)
+    return result
 
 
 def generate_flashing_animation(image):
