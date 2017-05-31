@@ -1,22 +1,16 @@
-import os
-import uuid
-import tempfile
-import yaml
+import argparse
 import logging
 import logging.config
-import argparse
-from functools import partial
+import os
 import tkMessageBox
 from ctypes import windll
-from tkinter import Tk
-import clipboard
+import yaml
 from desktopmagic.screengrab_win32 import getRectAsImage
-from twython import Twython
-from PIL import ImageTk
 from quicklock import singleton
+from tkinter import Tk
 import drag
-import view
-import event
+from view import run_image_view
+
 
 logger = logging.getLogger()
 
@@ -36,15 +30,6 @@ def configure_logging(logging_settings):
     logging.config.dictConfig(yaml.load(open(logging_settings)))
 
 
-def get_api(twitter_settings):
-    cfg = yaml.load(open(twitter_settings, 'rb'))
-    return Twython(
-        cfg['consumer_key'],
-        cfg['consumer_secret'],
-        cfg['access_token_key'],
-        cfg['access_token_secret'])
-
-
 def show_error(msg):
     # hide required tkinter root window
     # is it an anti-pattern to instantiate multiple root objects within the application lifetime??
@@ -58,60 +43,17 @@ def take_screen_shot(bbox):
     return getRectAsImage(bbox)
 
 
-def generate_temp_file_name():
-    return os.path.join(tempfile.gettempdir(), str(uuid.uuid4()))
-
-
-class ImageFileContext(object):
-    """
-    Context that takes an image, saves it as a temp file and returns the file object
-    It'd be better if I could just derive a BytesIO object from `image` but I can't get it to upload
-    """
-    def __init__(self, image):
-        image_file_name = generate_temp_file_name()
-        image.save(image_file_name, format='png')
-        self.image_file = open(image_file_name, 'rb')
-
-    def __enter__(self):
-        return self.image_file
-
-    def __exit__(self, *args, **kwargs):
-        return self.image_file.close()
-
-
-def upload_image(image, twitter_settings):
-    """Upload image to twitter account"""
-    api = get_api(twitter_settings)
-    with ImageFileContext(image) as image_file:
-        media_id = api.upload_media(media=image_file)['media_id']
-    resp = api.update_status(media_ids=[media_id])
-    return resp['entities']['media'][0]['display_url']
-
-
-def on_twitter_upload(image, twitter_settings, _):
-    logger.info('on_twitter_upload')
-    clipboard.copy(upload_image(image, twitter_settings))
-
-
-def run_image_view(image, area, twitter_settings):
-    image_view = Tk()
-    # `PhotoImage` has to be instantiated after the root object and
-    # also has to persist in a variable while the event loop is running
-    tkimage = ImageTk.PhotoImage(image)
-    view.setup_image_view(image_view, tkimage, area)
-    image_view.bind(event.TWITTER_UPLOAD, partial(on_twitter_upload, image, twitter_settings))
-    image_view.mainloop()
+def support_scaled_screen():
+    windll.user32.SetProcessDPIAware()
 
 
 def main():
     args = get_args()
 
     ensure_single_instance()
+    support_scaled_screen()
     configure_logging(args.logging_settings)
     logger.info('Initiating')
-
-    # this is required if the screen is scaled
-    windll.user32.SetProcessDPIAware()
 
     if not os.path.exists(args.twitter_settings):
         show_error('%s does not exist' % args.twitter_settings)

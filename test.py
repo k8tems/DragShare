@@ -1,5 +1,19 @@
 import unittest
 import drag
+import view
+
+
+class TestAnimation(unittest.TestCase):
+    def test(self):
+        ani = view.Animation([1, 2], None)
+        self.assertEqual(1, ani.next())
+        self.assertEqual(2, ani.next())
+        self.assertRaises(StopIteration, ani.next)
+
+
+class TestBirange(unittest.TestCase):
+    def test(self):
+        self.assertEqual([1.0, 1.5, 2.0, 1.5, 1.0], view.birange(1.0, 2.0, 0.5))
 
 
 class TestArea(unittest.TestCase):
