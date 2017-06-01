@@ -22,10 +22,6 @@ def get_args():
     return parser.parse_args()
 
 
-def ensure_single_instance():
-    singleton('DragShare')
-
-
 def configure_logging(logging_settings):
     logging.config.dictConfig(yaml.load(open(logging_settings)))
 
@@ -49,7 +45,6 @@ def support_scaled_screen():
 def main():
     args = get_args()
 
-    ensure_single_instance()
     support_scaled_screen()
     configure_logging(args.logging_settings)
     logger.info('Initiating')
