@@ -9,7 +9,8 @@ python2.7  # can't get compiling to work with py3
 ```
 
 ### Files that need to be in the same folder
-`twitter.yml` containing api credentials for twitter account
+`twitter.yml` containing api credentials of twitter account for uploading images
+the twitter account has to be public
 ```
 consumer_key: 'consumer_key'
 consumer_secret: 'consumer_secret'
