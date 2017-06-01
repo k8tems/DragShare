@@ -43,3 +43,5 @@ C:\Python27\Scripts\pyinstaller main.py
 - [x] Create image confirmation window
 - [x] Support multi monitor environment
 - [x] Somehow notify the user after the upload has been finished
+- [ ] Log exceptions
+- [ ] Notify user if anything goes wrong with the upload
