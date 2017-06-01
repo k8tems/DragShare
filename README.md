@@ -6,7 +6,7 @@ windows 10
 python2.7  # can't get compiling to work with py3
 ```
 
-### Required files
+### Files that need to be in the same folder
 `twitter.yml` containing api credentials for twitter account
 ```
 consumer_key: 'consumer_key'
