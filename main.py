@@ -32,7 +32,6 @@ def configure_logging(logging_settings):
 
 def show_error(msg):
     # hide required tkinter root window
-    # is it an anti-pattern to instantiate multiple root objects within the application lifetime??
     root = Tk()
     root.withdraw()
     tkMessageBox.showerror('Error', msg)
