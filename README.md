@@ -17,7 +17,7 @@ consumer_secret: 'consumer_secret'
 access_token_key: 'access_token_key'
 access_token_secret: 'access_token_secret'
 ```
-`log.conf`
+`log.yml` for configuring logging
 
 ### Install required packages
 ```

@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--twitter_settings', type=str, default='twitter.yml')
-    parser.add_argument('--logging_settings', type=str, default='log.conf')
+    parser.add_argument('--logging_settings', type=str, default='log.yml')
     return parser.parse_args()
 
 
