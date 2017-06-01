@@ -1,5 +1,7 @@
 # DragShare
 
+![](https://j.gifs.com/Rgz5XO.gif)
+
 ### Tested environment
 ```
 windows 10
