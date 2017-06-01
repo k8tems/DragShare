@@ -3,6 +3,13 @@ import drag
 import view
 
 
+class TestScale(unittest.TestCase):
+    def test(self):
+        scale = view.ViewScale((100, 100))
+        self.assertEqual((110, 110), scale(1))
+        self.assertEqual((100, 100), scale(-1))
+
+
 class TestAnimation(unittest.TestCase):
     def test(self):
         ani = view.Animation([1, 2], None)

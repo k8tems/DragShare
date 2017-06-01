@@ -32,7 +32,6 @@ def configure_logging(logging_settings):
 
 def show_error(msg):
     # hide required tkinter root window
-    # is it an anti-pattern to instantiate multiple root objects within the application lifetime??
     root = Tk()
     root.withdraw()
     tkMessageBox.showerror('Error', msg)
@@ -62,7 +61,7 @@ def main():
     area = drag.monitor_drag()
 
     if not area.is_valid:
-        logger.warning('Invalid area ' + str(area))
+        logger.warning('Invalid area %s %s' % (area.init_pos, area.cur_pos))
         return
 
     image = take_screen_shot(area.bbox)

@@ -2,6 +2,7 @@ import os
 import tempfile
 import uuid
 import logging
+from functools import partial
 from Tkinter import Toplevel, Tk
 import tkinter
 from StringIO import StringIO
@@ -136,10 +137,11 @@ def generate_flashing_animation(image):
 
 
 class ScreenshotCanvas(tkinter.Canvas):
-    def __init__(self, parent, image, twitter_animation):
+    def __init__(self, parent, image, generate_animation):
         tkinter.Canvas.__init__(self, parent)
-        self.image = image
-        self.twitter_animation = twitter_animation
+        self.orig_image = image
+        self.cur_image = self.orig_image
+        self.generate_animation = generate_animation
         self.pack(fill=tkinter.BOTH, expand=tkinter.YES)
         # `PhotoImage` has to be instantiated after the root object and
         # also has to persist in a variable while the event loop is running
@@ -147,6 +149,7 @@ class ScreenshotCanvas(tkinter.Canvas):
         self.set_image(image)
 
     def set_image(self, image):
+        self.cur_image = image
         self.tkimage = ImageTk.PhotoImage(image)
         self.create_image(0, 0, anchor='nw', image=self.tkimage)
 
@@ -162,17 +165,46 @@ class ScreenshotCanvas(tkinter.Canvas):
     def on_twitter_upload_finished(self, _):
         logger.info('Upload finished')
         """Animate the image to notify the user"""
-        self.after(0, self.play_animation, self.twitter_animation)
+        self.after(0, self.play_animation, self.generate_animation(self.cur_image))
+
+    def resize(self, size):
+        self.set_image(self.orig_image.resize(size))
+
+
+class ViewScale(object):
+    def __init__(self, orig_size):
+        self.orig_size = orig_size
+        self.cur_scale = 1
+
+    def __call__(self, diff):
+        self.cur_scale += diff * 0.1
+        factor = self.cur_scale
+        new_size = (int(self.orig_size[0] * factor), int(self.orig_size[1] * factor))
+        return new_size
+
+
+def on_mouse_wheel(image_view, canvas, view_scale, e):
+    if e.state == 12:
+        canvas.pack(fill=tkinter.BOTH, expand=tkinter.YES)
+        new_size = view_scale(e.delta / 120)
+        logger.debug('new_size ' + str(new_size))
+        image_view.geometry('%dx%d' % new_size)
+        canvas.resize(new_size)
 
 
 def run_image_view(image, area, twitter_settings):
     image_view = Tk()
-    image_view.attributes('-topmost', True)
     # window needs to be shown before calculating the client area offset
     image_view.update()
+    # make sure the view has focus so that it can catch mouse/key events
+    # `focus_force` implicitly moves the window so it has to be called before aligning the window
+    image_view.focus_force()
     align_window_with_area(image_view, area)
-    animation = generate_flashing_animation(image)
-    canvas = ScreenshotCanvas(image_view, image, animation)
+    # update once again to reflect changes before initializing `ViewScale`
+    image_view.update()
+    view_scale = ViewScale((image_view.winfo_width(), image_view.winfo_height()))
+    canvas = ScreenshotCanvas(image_view, image, generate_flashing_animation)
+    image_view.bind('<MouseWheel>', partial(on_mouse_wheel, image_view, canvas, view_scale))
     url_retriever = TwitterUploader(image_view, image, twitter_settings)
     url_retriever.bind(event.TWITTER_UPLOAD_FINISHED, canvas.on_twitter_upload_finished)
     menu = tkinter.Menu(image_view, tearoff=0)
