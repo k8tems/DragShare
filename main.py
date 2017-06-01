@@ -6,7 +6,6 @@ import tkMessageBox
 from ctypes import windll
 import yaml
 from desktopmagic.screengrab_win32 import getRectAsImage
-from quicklock import singleton
 from tkinter import Tk
 import drag
 from view import run_image_view
