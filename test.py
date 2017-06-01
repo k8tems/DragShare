@@ -11,7 +11,7 @@ class TestAnimation(unittest.TestCase):
         self.assertRaises(StopIteration, ani.next)
 
 
-class TestBirange(unittest.TestCase):
+class TestGenerateFlashingSequence(unittest.TestCase):
     def test(self):
         self.assertEqual([1.0, 1.5, 2.0, 1.5, 1.0], view.generate_flashing_sequence(1.0, 2.0, 0.5))
 
