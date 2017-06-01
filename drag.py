@@ -46,7 +46,7 @@ class DragArea(dict):
 
     @property
     def is_valid(self):
-        return self.width > 0 and self.height > 0
+        return self['init_pos'] and self['cur_pos'] and self.width > 0 and self.height > 0
 
 
 def get_screen_resolution():
