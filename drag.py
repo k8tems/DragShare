@@ -7,30 +7,31 @@ import event
 logger = logging.getLogger()
 
 
-class DragArea(dict):
+class DragArea(object):
     """
     Class that represents the area dragged by mouse
     init_pos represents the location of which the mouse was pressed
     cur_pos represents the location of which the mouse was last seen
     """
     def __init__(self, init_pos=None, cur_pos=None):
-        super(DragArea, self).__init__(init_pos=init_pos, cur_pos=cur_pos)
+        self.init_pos = init_pos
+        self.cur_pos = cur_pos
 
     @property
     def left(self):
-        return min(self['init_pos'][0], self['cur_pos'][0])
+        return min(self.init_pos[0], self.cur_pos[0])
 
     @property
     def top(self):
-        return min(self['init_pos'][1], self['cur_pos'][1])
+        return min(self.init_pos[1], self.cur_pos[1])
 
     @property
     def right(self):
-        return max(self['init_pos'][0], self['cur_pos'][0])
+        return max(self.init_pos[0], self.cur_pos[0])
 
     @property
     def bottom(self):
-        return max(self['init_pos'][1], self['cur_pos'][1])
+        return max(self.init_pos[1], self.cur_pos[1])
 
     @property
     def width(self):
@@ -46,7 +47,7 @@ class DragArea(dict):
 
     @property
     def is_valid(self):
-        return self['init_pos'] and self['cur_pos'] and self.width > 0 and self.height > 0
+        return self.init_pos and self.cur_pos and self.width > 0 and self.height > 0
 
 
 def get_screen_resolution():
@@ -86,13 +87,13 @@ class DragWindow(Toplevel):
 
     def on_back_motion(self, event):
         # make sure the mouse has been pressed
-        if self.drag_area['init_pos']:
-            self.drag_area['cur_pos'] = event.x, event.y
-            logger.debug('%s %s' % (self.drag_area['init_pos'], self.drag_area['cur_pos']))
+        if self.drag_area.init_pos:
+            self.drag_area.cur_pos = event.x, event.y
+            logger.debug('%s %s' % (self.drag_area.init_pos, self.drag_area.cur_pos))
             self.relocate(self.drag_area)
 
     def on_back_press(self, event):
-        self.drag_area['init_pos'] = event.x, event.y
+        self.drag_area.init_pos = event.x, event.y
 
 
 class RootWindow(Tk):
