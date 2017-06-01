@@ -61,7 +61,7 @@ def main():
     area = drag.monitor_drag()
 
     if not area.is_valid:
-        logger.warning('Invalid area ' + str(area))
+        logger.warning('Invalid area %s %s' % (area.init_pos, area.cur_pos))
         return
 
     image = take_screen_shot(area.bbox)
