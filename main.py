@@ -8,10 +8,11 @@ import yaml
 from desktopmagic.screengrab_win32 import getRectAsImage
 from tkinter import Tk
 import drag
+from exception import log_exception
 from view import run_image_view
 
 
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 
 
 def get_args():
@@ -41,6 +42,7 @@ def support_scaled_screen():
     windll.user32.SetProcessDPIAware()
 
 
+@log_exception
 def main():
     args = get_args()
 

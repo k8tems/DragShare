@@ -2,9 +2,10 @@ import logging
 from Tkinter import Tk, Toplevel
 import screeninfo
 import event
+from exception import log_exception
 
 
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 
 
 class DragArea(object):
@@ -85,6 +86,7 @@ class DragWindow(Toplevel):
         self.geometry("+%d+%d" % (drag_area.left, drag_area.top))
         self.geometry("%dx%d" % (drag_area.width, drag_area.height))
 
+    @log_exception
     def on_back_motion(self, event):
         # make sure the mouse has been pressed
         if self.drag_area.init_pos:
@@ -92,6 +94,7 @@ class DragWindow(Toplevel):
             logger.debug('%s %s' % (self.drag_area.init_pos, self.drag_area.cur_pos))
             self.relocate(self.drag_area)
 
+    @log_exception
     def on_back_press(self, event):
         self.drag_area.init_pos = event.x, event.y
 
@@ -104,6 +107,7 @@ class RootWindow(Tk):
         # so this has to be called in addition to completely hide the window
         self.overrideredirect(1)
 
+    @log_exception
     def on_finish(self, _):
         self.destroy()
 

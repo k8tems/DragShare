@@ -12,9 +12,10 @@ import yaml
 from twython import Twython
 from PIL import ImageTk, ImageEnhance
 import event
+from exception import log_exception
 
 
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 
 
 def send_image_to_clipboard(img):
@@ -90,6 +91,7 @@ class TwitterUploader(HiddenWindow):
         resp = api.update_status(media_ids=[media_id])
         return resp['entities']['media'][0]['display_url']
 
+    @log_exception
     def on_upload_request(self):
         logger.info('Got upload request')
         image_url = self.upload_image()
@@ -162,6 +164,7 @@ class ScreenshotCanvas(tkinter.Canvas):
         except StopIteration:
             logger.debug('animation ended')
 
+    @log_exception
     def on_twitter_upload_finished(self, _):
         logger.info('Upload finished')
         """Animate the image to notify the user"""
@@ -183,6 +186,7 @@ class ViewScale(object):
         return new_size
 
 
+@log_exception
 def on_mouse_wheel(image_view, canvas, view_scale, e):
     if e.state == 12:
         canvas.pack(fill=tkinter.BOTH, expand=tkinter.YES)
