@@ -1,13 +1,9 @@
 .idea
-test.png
-twitter.yml
 buildd.bat
 buildp.bat
 build
 dist
 main.spec
-log.conf
 log.txt
 .lock
-logging
-logs
+settings
