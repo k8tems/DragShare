@@ -6,17 +6,6 @@ windows 10
 python2.7  # can't get compiling to work with py3
 ```
 
-### Required packages
-```
-twython==3.4.0
-pyyaml==3.12
-pillow==4.1.1
-pyinstaller==3.2.1
-clipboard==0.0.4
-screeninfo==0.3
-Desktopmagic==14.3.11
-```
-
 ### Required files
 `twitter.yml` containing api credentials for twitter account
 ```
@@ -26,6 +15,12 @@ access_token_key: 'access_token_key'
 access_token_secret: 'access_token_secret'
 ```
 `log.conf`
+
+### Install required packages
+```
+pip install -r requirements.txt
+```
+
 ### Running the app
 ```
 main.py
