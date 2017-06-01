@@ -5,6 +5,7 @@ import logging
 from functools import partial
 from Tkinter import Toplevel, Tk
 import tkinter
+import tkFileDialog
 from StringIO import StringIO
 import clipboard
 import win32clipboard
@@ -196,6 +197,16 @@ def on_mouse_wheel(image_view, canvas, view_scale, e):
         canvas.resize(new_size)
 
 
+def save_file(image):
+    f = tkFileDialog.asksaveasfile(mode='w', defaultextension='.png')
+    if not f:
+        logger.info('save aborted')
+        return
+    logger.info('saving to ' + f.name)
+    image.save(os.path.abspath(f.name))
+    f.close()
+
+
 def run_image_view(image, area, twitter_settings):
     image_view = Tk()
     # window needs to be shown before calculating the client area offset
@@ -214,5 +225,6 @@ def run_image_view(image, area, twitter_settings):
     menu = tkinter.Menu(image_view, tearoff=0)
     menu.add_command(label='Copy', command=lambda: send_image_to_clipboard(image))
     menu.add_command(label='Upload to twitter', command=url_retriever.on_upload_request)
+    menu.add_command(label='Save', command=partial(save_file, image))
     image_view.bind(event.RIGHT_PRESS, lambda e: menu.post(e.x_root, e.y_root))
     image_view.mainloop()
