@@ -70,12 +70,12 @@ def get_api(twitter_settings):
 
 
 class HiddenWindow(Toplevel):
+    """Has to be `Toplevel`; Any event emitted by `Frame` is ignored"""
     def __init__(self, parent):
         Toplevel.__init__(self, parent)
         self.withdraw()
 
 
-# Has to be `Toplevel`; Any event emitted by `Frame` is ignored
 class TwitterUploader(HiddenWindow):
     def __init__(self, parent, image, twitter_settings):
         HiddenWindow.__init__(self, parent)
