@@ -48,3 +48,4 @@ C:\Python27\Scripts\pyinstaller main.py
 - [x] Somehow notify the user after the upload has been finished
 - [ ] Log exceptions
 - [ ] Notify user if anything goes wrong with the upload
+- [ ] Support google image search
