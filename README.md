@@ -47,5 +47,7 @@ C:\Python27\Scripts\pyinstaller main.py
 - [x] Support multi monitor environment
 - [x] Somehow notify the user after the upload has been finished
 - [x] Log exceptions
-- [ ] Notify user if anything goes wrong with the upload
+- [ ] Save image to disk
+- [ ] Do I/O asynchronously
 - [ ] Support google image search
+- [ ] Notify user if anything goes wrong with the upload
