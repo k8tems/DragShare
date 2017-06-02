@@ -222,11 +222,11 @@ def save_file(image):
 
 def run_image_view(image, area, twitter_settings):
     image_view = Tk()
-    # window needs to be shown before calculating the client area offset
-    image_view.update()
     # make sure the view has focus so that it can catch mouse/key events
     # `focus_force` implicitly moves the window so it has to be called before aligning the window
     image_view.focus_force()
+    # window needs to be shown before calculating the client area offset
+    image_view.update()
     align_window_with_area(image_view, area)
     canvas = ScreenshotCanvas(image_view, image, generate_flashing_animation)
     view_scale = ViewScale((area.width, area.height))
