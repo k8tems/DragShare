@@ -3,6 +3,11 @@ import drag
 import view
 
 
+class TestGetWinfo(unittest.TestCase):
+    def test(self):
+        self.assertEqual((400, 500), view.get_winfo('200x300+400+500'))
+
+
 class TestScale(unittest.TestCase):
     def setUp(self):
         self.scale = view.ViewScale((100, 100))

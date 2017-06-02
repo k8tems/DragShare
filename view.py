@@ -1,4 +1,5 @@
 import os
+import re
 import tempfile
 import uuid
 import logging
@@ -31,13 +32,20 @@ def send_image_to_clipboard(img):
     win32clipboard.CloseClipboard()
 
 
+def get_winfo(geometry):
+    """Working around by parsing the geometry since `winfo_x/y` returns 0 if the window is withdrawn"""
+    regex = re.search('\d+x\d+\+(\d+)\+(\d+)', geometry)
+    return int(regex.group(1)), int(regex.group(2))
+
+
 def align_window_with_area(window, area):
     """
     Adjust the geometry so that the client area of the window is
     aligned with the actual area of the screen shot
     """
-    client_x_offset = window.winfo_rootx() - window.winfo_x()
-    client_y_offset = window.winfo_rooty() - window.winfo_y()
+    winfo_x, winfo_y = get_winfo(window.geometry())
+    client_x_offset = window.winfo_rootx() - winfo_x
+    client_y_offset = window.winfo_rooty() - winfo_y
     window.geometry('+%d+%d' % (area.left - client_x_offset, area.top - client_y_offset))
     window.geometry('%dx%d' % (area.width, area.height))
 
@@ -226,9 +234,13 @@ def run_image_view(image, area, twitter_settings):
     # make sure the view has focus so that it can catch mouse/key events
     # `focus_force` implicitly moves the window so it has to be called before aligning the window
     image_view.focus_force()
-    # window needs to be shown before calculating the client area offset
+    # `update` needs to be called before calculating the client area offset
+    # `withdraw` should be called prior to hide the ugly default window
+    image_view.wm_withdraw()
     image_view.update()
     align_window_with_area(image_view, area)
+    # `deiconify` does not show the window
+    image_view.wm_deiconify()
     canvas = ScreenshotCanvas(image_view, image, generate_flashing_animation)
     view_scale = ViewScale((area.width, area.height))
     image_view.bind('<MouseWheel>', partial(on_mouse_wheel, image_view, canvas, view_scale))
