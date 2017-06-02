@@ -108,10 +108,11 @@ class TwitterUploader(HiddenWindow):
         def thread_proc():
             image_url = self.upload_image()
             logging.info('image_url ' + image_url)
-            self.event_generate(event.TWITTER_UPLOAD_FINISHED, when='tail')
             # I should decouple this from this class but I can't seem to find a better way to do this without
             # attaching data to the event which isn't possible with tkinter python
             clipboard.copy(image_url)
+            # the event should be generated after the image url is copied
+            self.event_generate(event.TWITTER_UPLOAD_FINISHED, when='tail')
 
         Thread(target=thread_proc).start()
 
