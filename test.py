@@ -13,8 +13,9 @@ class TestScale(unittest.TestCase):
     def test_decrease(self):
         self.assertEqual((90, 90), self.scale(-1))
 
-    def test_capped_to_negative_1(self):
-        self.assertEqual((-10, -10), self.scale(-11))
+    def test_capped_to_10_percent(self):
+        self.assertEqual((10, 10), self.scale(-9))
+        self.assertEqual((10, 10), self.scale(-10))
 
 
 class TestAnimation(unittest.TestCase):
