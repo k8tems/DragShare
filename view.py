@@ -190,11 +190,12 @@ class ViewScale(object):
     def __init__(self, orig_size):
         self.orig_size = orig_size
         self.cur_scale = 1
+        self.min_scale = 0.1
 
     def __call__(self, diff):
         new_scale = self.cur_scale + diff * 0.1
-        if new_scale < 0.1:
-            new_scale = 0.1
+        if new_scale < self.min_scale:
+            new_scale = self.min_scale
         logger.debug(new_scale)
         self.cur_scale = new_scale
         new_size = (int(self.orig_size[0] * self.cur_scale), int(self.orig_size[1] * self.cur_scale))
