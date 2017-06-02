@@ -13,7 +13,7 @@ class TestScale(unittest.TestCase):
     def test_decrease(self):
         self.assertEqual((90, 90), self.scale(-1))
 
-    def test_below_zero(self):
+    def test_capped_to_negative_1(self):
         self.assertEqual((-10, -10), self.scale(-11))
 
 
