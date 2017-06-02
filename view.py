@@ -79,7 +79,7 @@ class HiddenWindow(Toplevel):
         self.withdraw()
 
 
-class TwitterUploader(HiddenWindow):
+class ImageUrlRetriever(HiddenWindow):
     def __init__(self, parent, image, twitter_settings):
         HiddenWindow.__init__(self, parent)
         self.image = image
@@ -234,7 +234,7 @@ def run_image_view(image, area, twitter_settings):
     view_scale = ViewScale((image_view.winfo_width(), image_view.winfo_height()))
     canvas = ScreenshotCanvas(image_view, image, generate_flashing_animation)
     image_view.bind('<MouseWheel>', partial(on_mouse_wheel, image_view, canvas, view_scale))
-    url_retriever = TwitterUploader(image_view, image, twitter_settings)
+    url_retriever = ImageUrlRetriever(image_view, image, twitter_settings)
     url_retriever.bind(event.IMAGE_URL_RETRIEVED, canvas.on_twitter_upload_finished)
     menu = tkinter.Menu(image_view, tearoff=0)
     menu.add_command(label='Copy', command=lambda: send_image_to_clipboard(image))
