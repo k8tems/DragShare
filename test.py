@@ -4,10 +4,17 @@ import view
 
 
 class TestScale(unittest.TestCase):
-    def test(self):
-        scale = view.ViewScale((100, 100))
-        self.assertEqual((110, 110), scale(1))
-        self.assertEqual((100, 100), scale(-1))
+    def setUp(self):
+        self.scale = view.ViewScale((100, 100))
+
+    def test_increase(self):
+        self.assertEqual((110, 110), self.scale(1))
+
+    def test_decrease(self):
+        self.assertEqual((90, 90), self.scale(-1))
+
+    def test_below_zero(self):
+        self.assertEqual((-10, -10), self.scale(-11))
 
 
 class TestAnimation(unittest.TestCase):

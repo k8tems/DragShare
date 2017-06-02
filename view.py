@@ -192,9 +192,11 @@ class ViewScale(object):
         self.cur_scale = 1
 
     def __call__(self, diff):
-        self.cur_scale += diff * 0.1
-        factor = self.cur_scale
-        new_size = (int(self.orig_size[0] * factor), int(self.orig_size[1] * factor))
+        new_scale = self.cur_scale + diff * 0.1
+        if new_scale < -1:
+            new_scale = -1
+        self.cur_scale = new_scale
+        new_size = (int(self.orig_size[0] * self.cur_scale), int(self.orig_size[1] * self.cur_scale))
         return new_size
 
 
@@ -226,10 +228,8 @@ def run_image_view(image, area, twitter_settings):
     # `focus_force` implicitly moves the window so it has to be called before aligning the window
     image_view.focus_force()
     align_window_with_area(image_view, area)
-    # update once again to reflect changes before initializing `ViewScale`
-    image_view.update()
-    view_scale = ViewScale((image_view.winfo_width(), image_view.winfo_height()))
     canvas = ScreenshotCanvas(image_view, image, generate_flashing_animation)
+    view_scale = ViewScale((area.width, area.height))
     image_view.bind('<MouseWheel>', partial(on_mouse_wheel, image_view, canvas, view_scale))
     url_retriever = ImageUrlRetriever(image_view, partial(upload_to_twitter, image, twitter_settings))
     url_retriever.bind(event.IMAGE_URL_RETRIEVED, canvas.on_twitter_upload_finished)
