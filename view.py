@@ -112,7 +112,7 @@ class TwitterUploader(HiddenWindow):
             # attaching data to the event which isn't possible with tkinter python
             clipboard.copy(image_url)
             # the event should be generated after the image url is copied
-            self.event_generate(event.TWITTER_UPLOAD_FINISHED, when='tail')
+            self.event_generate(event.IMAGE_URL_RETRIEVED, when='tail')
 
         Thread(target=thread_proc).start()
 
@@ -235,7 +235,7 @@ def run_image_view(image, area, twitter_settings):
     canvas = ScreenshotCanvas(image_view, image, generate_flashing_animation)
     image_view.bind('<MouseWheel>', partial(on_mouse_wheel, image_view, canvas, view_scale))
     url_retriever = TwitterUploader(image_view, image, twitter_settings)
-    url_retriever.bind(event.TWITTER_UPLOAD_FINISHED, canvas.on_twitter_upload_finished)
+    url_retriever.bind(event.IMAGE_URL_RETRIEVED, canvas.on_twitter_upload_finished)
     menu = tkinter.Menu(image_view, tearoff=0)
     menu.add_command(label='Copy', command=lambda: send_image_to_clipboard(image))
     menu.add_command(label='Upload to twitter', command=url_retriever.on_upload_request)
