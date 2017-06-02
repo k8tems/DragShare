@@ -7,6 +7,7 @@ from Tkinter import Toplevel, Tk
 import tkinter
 import tkFileDialog
 from StringIO import StringIO
+from threading import Thread
 import clipboard
 import win32clipboard
 import yaml
@@ -93,14 +94,26 @@ class TwitterUploader(HiddenWindow):
         return resp['entities']['media'][0]['display_url']
 
     @log_exception
-    def on_upload_request(self):
-        logger.info('Got upload request')
+    def copy_image_url(self):
+        """
+        https://mail.python.org/pipermail/python-list/2003-December/197985.html
+        > The general rule is that the thread that owns the GUI can be the only one
+        > that can directly manipulate the GUI (call it's functions). Sending messages
+        > that the GUI thread processes is nearly always just fine since the GUI
+        > thread, and it's state, are used to do the actual GUI manipulation.
+        `event_generate` seems thread safe
+        """
         image_url = self.upload_image()
         logging.info('image_url ' + image_url)
-        # I should decouple this from this class but I can't seem to find a better way to do this without
-        # attaching data to the event
-        clipboard.copy(image_url)
         self.event_generate(event.TWITTER_UPLOAD_FINISHED, when='tail')
+        # I should decouple this from this class but I can't seem to find a better way to do this without
+        # attaching data to the event which isn't possible with tkinter python
+        clipboard.copy(image_url)
+
+    @log_exception
+    def on_upload_request(self):
+        logger.info('Got upload request')
+        Thread(target=self.copy_image_url).start()
 
 
 class Animation(object):
