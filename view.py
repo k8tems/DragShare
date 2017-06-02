@@ -93,8 +93,7 @@ class ImageUrlRetriever(HiddenWindow):
         HiddenWindow.__init__(self, parent)
         self.upload_image = upload_image
 
-    @log_exception
-    def on_upload_request(self):
+    def thread_proc(self):
         """
         https://mail.python.org/pipermail/python-list/2003-December/197985.html
         > The general rule is that the thread that owns the GUI can be the only one
@@ -103,18 +102,16 @@ class ImageUrlRetriever(HiddenWindow):
         > thread, and it's state, are used to do the actual GUI manipulation.
         `event_generate` seems thread safe
         """
+        image_url = self.upload_image()
+        logging.info('image_url ' + image_url)
+        clipboard.copy(image_url)
+        # the event should be generated after the image url is copied
+        self.event_generate(event.IMAGE_URL_RETRIEVED, when='tail')
+
+    @log_exception
+    def on_upload_request(self):
         logger.info('Got upload request')
-
-        def thread_proc():
-            image_url = self.upload_image()
-            logging.info('image_url ' + image_url)
-            # I should decouple this from this class but I can't seem to find a better way to do this without
-            # attaching data to the event which isn't possible with tkinter python
-            clipboard.copy(image_url)
-            # the event should be generated after the image url is copied
-            self.event_generate(event.IMAGE_URL_RETRIEVED, when='tail')
-
-        Thread(target=thread_proc).start()
+        Thread(target=self.thread_proc).start()
 
 
 class Animation(object):
