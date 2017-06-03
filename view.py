@@ -200,13 +200,13 @@ class CanvasAnimation(HiddenWindow):
     def on_twitter_upload_finished(self, _):
         logger.info('Upload finished')
         self.run_animation = False
-        self.canvas.set_image(self.canvas.cur_image)
+        self.canvas.set_image(self.canvas.cur_image_without_effect)
 
     def on_image_url_requested(self):
         """Animate the image to notify the user"""
         logger.info('Image url requested')
         self.run_animation = True
-        self.after(0, self.play_animation, self.generate_animation(self.canvas.cur_image))
+        self.after(0, self.play_animation, self.generate_animation(self.canvas.cur_image_without_effect))
 
 
 class ViewScale(object):
