@@ -169,6 +169,7 @@ class ScreenshotCanvas(tkinter.Canvas):
         # also has to persist in a variable while the event loop is running
         self.tkimage = None
         self.set_image(image)
+        self.run_animation = False
 
     def set_image(self, image):
         self.cur_image = image
@@ -176,17 +177,23 @@ class ScreenshotCanvas(tkinter.Canvas):
         self.create_image(0, 0, anchor='nw', image=self.tkimage)
 
     def play_animation(self, ani):
-        try:
-            frame = ani.next()
-            logger.debug('showing frame %s' % frame)
-            self.set_image(frame)
-            self.after(ani.delay, self.play_animation, ani)
-        except StopIteration:
+        if not self.run_animation:
             logger.debug('animation ended')
+            return
+        frame = ani.next()
+        logger.debug('showing frame %s' % frame)
+        self.set_image(frame)
+        self.after(ani.delay, self.play_animation, ani)
 
     @log_exception
     def on_twitter_upload_finished(self, _):
         logger.info('Upload finished')
+        self.run_animation = False
+        self.set_image(self.orig_image)
+
+    def on_image_url_requested(self):
+        logger.info('Image url requested')
+        self.run_animation = True
         """Animate the image to notify the user"""
         self.after(0, self.play_animation, self.generate_animation(self.cur_image))
 
@@ -253,4 +260,5 @@ def run_image_view(image, area, twitter_settings):
     menu.add_command(label='Save', command=partial(save_file, image))
     image_view.bind(event.RIGHT_PRESS, lambda e: menu.post(e.x_root, e.y_root))
     image_view.bind(event.IMAGE_URL_REQUEST, lambda e: url_retriever.on_upload_request())
+    image_view.bind(event.IMAGE_URL_REQUEST, lambda e: canvas.on_image_url_requested())
     image_view.mainloop()
