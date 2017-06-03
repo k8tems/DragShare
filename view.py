@@ -179,10 +179,8 @@ class ScreenshotCanvas(tkinter.Canvas):
 
 
 class CanvasAnimation(HiddenWindow):
-    def __init__(self, parent, image, generate_animation, canvas):
+    def __init__(self, parent, generate_animation, canvas):
         HiddenWindow.__init__(self, parent)
-        self.orig_image = image
-        self.cur_image = self.orig_image
         self.generate_animation = generate_animation
         self.canvas = canvas
         # `PhotoImage` has to be instantiated after the root object and
@@ -202,13 +200,13 @@ class CanvasAnimation(HiddenWindow):
     def on_twitter_upload_finished(self, _):
         logger.info('Upload finished')
         self.run_animation = False
-        self.canvas.set_image(self.orig_image)
+        self.canvas.set_image(self.canvas.orig_image)
 
     def on_image_url_requested(self):
         logger.info('Image url requested')
         self.run_animation = True
         """Animate the image to notify the user"""
-        self.after(0, self.play_animation, self.generate_animation(self.cur_image))
+        self.after(0, self.play_animation, self.generate_animation(self.canvas.cur_image))
 
 
 class ViewScale(object):
@@ -259,7 +257,7 @@ def run_image_view(image, area, twitter_settings):
     # `deiconify` does not show the window
     image_view.wm_deiconify()
     canvas = ScreenshotCanvas(image_view, image)
-    canvas_animation = CanvasAnimation(image_view, image, generate_flashing_animation, canvas)
+    canvas_animation = CanvasAnimation(image_view, generate_flashing_animation, canvas)
     view_scale = ViewScale((area.width, area.height))
     image_view.bind('<MouseWheel>', partial(on_mouse_wheel, image_view, canvas, view_scale))
     url_retriever = ImageUrlRetriever(image_view, partial(upload_to_twitter, image, twitter_settings))
