@@ -17,13 +17,13 @@ class TestCanvasAnimation(unittest.TestCase):
         # Play the animation for 500ms
         self.root.after(0, self.canvas_animation.on_image_url_requested)
 
-    def get_set_image_params(self):
+    def get_params_of_set_image(self):
         return [i[0][0] for i in self.canvas.set_image.call_args_list]
 
     def test(self):
         self.root.after(500, self.root.destroy)
         self.root.mainloop()
-        call_args_list = self.get_set_image_params()
+        call_args_list = self.get_params_of_set_image()
         # each frame is played more than n times
         for i in range(1, 6):
             self.assertGreater(call_args_list.count(i), 3)
@@ -33,7 +33,7 @@ class TestCanvasAnimation(unittest.TestCase):
         self.root.after(500, self.root.destroy)
         self.root.mainloop()
         # the scaled image is restored
-        self.assertEqual(6, self.get_set_image_params()[-1])
+        self.assertEqual(6, self.get_params_of_set_image()[-1])
 
 
 class TestGetWinfo(unittest.TestCase):
