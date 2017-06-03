@@ -187,7 +187,6 @@ class CanvasAnimation(HiddenWindow):
         self.canvas = canvas
         # `PhotoImage` has to be instantiated after the root object and
         # also has to persist in a variable while the event loop is running
-        self.tkimage = None
         self.run_animation = False
 
     def play_animation(self, ani):
