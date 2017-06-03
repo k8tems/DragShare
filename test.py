@@ -1,6 +1,28 @@
 import unittest
+import mock
 import drag
 import view
+import tkinter
+
+
+class MockCanvas(object):
+    def __init__(self):
+        self.cur_image_without_effect = None
+
+    def set_image(self, img):
+        pass
+
+
+class TestCanvasAnimation(unittest.TestCase):
+    def test(self):
+        generate_animation = lambda image: view.Animation([1, 2, 3, 4, 5], 10)
+        canvas = MockCanvas()
+
+        root = tkinter.Tk()
+        canvas_animation = view.CanvasAnimation(root, generate_animation, canvas)
+        root.after(0, canvas_animation.on_image_url_requested)
+        root.after(1000, root.destroy)
+        root.mainloop()
 
 
 class TestGetWinfo(unittest.TestCase):
