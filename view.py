@@ -177,7 +177,8 @@ class ScreenshotCanvas(tkinter.Canvas):
         self.create_image(0, 0, anchor='nw', image=self.tkimage)
 
     def resize(self, size):
-        self.set_image(self.orig_image.resize(size))
+        self.cur_image = self.orig_image.resize(size)
+        self.set_image(self.cur_image)
 
 
 class CanvasAnimation(HiddenWindow):
@@ -200,7 +201,7 @@ class CanvasAnimation(HiddenWindow):
     def on_twitter_upload_finished(self, _):
         logger.info('Upload finished')
         self.run_animation = False
-        self.canvas.set_image(self.canvas.orig_image)
+        self.canvas.set_image(self.canvas.cur_image)
 
     def on_image_url_requested(self):
         """Animate the image to notify the user"""
