@@ -176,27 +176,6 @@ class ScreenshotCanvas(tkinter.Canvas):
         self.tkimage = ImageTk.PhotoImage(image)
         self.create_image(0, 0, anchor='nw', image=self.tkimage)
 
-    def play_animation(self, ani):
-        if not self.run_animation:
-            logger.debug('animation ended')
-            return
-        frame = ani.next()
-        logger.debug('showing frame %s' % frame)
-        self.set_image(frame)
-        self.after(ani.delay, self.play_animation, ani)
-
-    @log_exception
-    def on_twitter_upload_finished(self, _):
-        logger.info('Upload finished')
-        self.run_animation = False
-        self.set_image(self.orig_image)
-
-    def on_image_url_requested(self):
-        logger.info('Image url requested')
-        self.run_animation = True
-        """Animate the image to notify the user"""
-        self.after(0, self.play_animation, self.generate_animation(self.cur_image))
-
     def resize(self, size):
         self.set_image(self.orig_image.resize(size))
 
