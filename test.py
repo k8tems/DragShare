@@ -17,22 +17,22 @@ class TestCanvasAnimation(unittest.TestCase):
 
         self.root.after(0, self.canvas_animation.on_image_url_requested)
 
-    def get_params_of_set_image(self):
+    def get_displayed_frames(self):
         return [i[0][0] for i in self.canvas.set_image.call_args_list]
 
     def test(self):
         self.root.after(500, self.root.destroy)
         self.root.mainloop()
-        # assert that the expected frames have been displayed
+        # assert that at least 3 frames have been played
         expected_frames = self.frames * 3
-        self.assertEqual(expected_frames, self.get_params_of_set_image()[:len(expected_frames)])
+        self.assertEqual(expected_frames, self.get_displayed_frames()[:len(expected_frames)])
 
     def test_on_twitter_upload_finished(self):
         self.root.after(500, self.canvas_animation.on_twitter_upload_finished)
         self.root.after(500, self.root.destroy)
         self.root.mainloop()
         # assert that the scaled image is restored
-        self.assertEqual(6, self.get_params_of_set_image()[-1])
+        self.assertEqual(6, self.get_displayed_frames()[-1])
 
 
 class TestGetWinfo(unittest.TestCase):
