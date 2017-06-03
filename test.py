@@ -7,7 +7,8 @@ import tkinter
 
 class TestCanvasAnimation(unittest.TestCase):
     def setUp(self):
-        self.generate_animation = lambda image: view.Animation([1, 2, 3, 4, 5], 10)
+        self.frames = [1, 2, 3, 4, 5]
+        self.generate_animation = lambda image: view.Animation(self.frames, 10)
         self.canvas = mock.MagicMock(cur_image_without_effect=6)
 
         self.root = tkinter.Tk()
@@ -23,16 +24,15 @@ class TestCanvasAnimation(unittest.TestCase):
     def test(self):
         self.root.after(500, self.root.destroy)
         self.root.mainloop()
-        call_args_list = self.get_params_of_set_image()
-        # each frame is played more than n times
-        for i in range(1, 6):
-            self.assertGreater(call_args_list.count(i), 3)
+        # assert that the expected frames have been played
+        expected_frames = self.frames * 3
+        self.assertEqual(expected_frames, self.get_params_of_set_image()[:len(expected_frames)])
 
     def test_on_twitter_upload_finished(self):
         self.root.after(500, self.canvas_animation.on_twitter_upload_finished)
         self.root.after(500, self.root.destroy)
         self.root.mainloop()
-        # the scaled image is restored
+        # assert that the scaled image is restored
         self.assertEqual(6, self.get_params_of_set_image()[-1])
 
 
