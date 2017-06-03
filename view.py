@@ -162,7 +162,6 @@ class ScreenshotCanvas(tkinter.Canvas):
     def __init__(self, parent, image):
         tkinter.Canvas.__init__(self, parent)
         self.orig_image = image
-        # current image without any effects
         self.cur_image_without_effect = self.orig_image
         self.displayed_image = self.orig_image
         self.pack(fill=tkinter.BOTH, expand=tkinter.YES)
