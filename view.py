@@ -159,17 +159,15 @@ def generate_flashing_animation(image):
 
 
 class ScreenshotCanvas(tkinter.Canvas):
-    def __init__(self, parent, image, generate_animation):
+    def __init__(self, parent, image):
         tkinter.Canvas.__init__(self, parent)
         self.orig_image = image
         self.cur_image = self.orig_image
-        self.generate_animation = generate_animation
         self.pack(fill=tkinter.BOTH, expand=tkinter.YES)
         # `PhotoImage` has to be instantiated after the root object and
         # also has to persist in a variable while the event loop is running
         self.tkimage = None
         self.set_image(image)
-        self.run_animation = False
 
     def set_image(self, image):
         self.cur_image = image
@@ -261,7 +259,7 @@ def run_image_view(image, area, twitter_settings):
     align_window_with_area(image_view, area)
     # `deiconify` does not show the window
     image_view.wm_deiconify()
-    canvas = ScreenshotCanvas(image_view, image, generate_flashing_animation)
+    canvas = ScreenshotCanvas(image_view, image)
     canvas_animation = CanvasAnimation(image_view, image, generate_flashing_animation, canvas)
     view_scale = ViewScale((area.width, area.height))
     image_view.bind('<MouseWheel>', partial(on_mouse_wheel, image_view, canvas, view_scale))
