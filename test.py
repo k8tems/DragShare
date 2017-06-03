@@ -15,7 +15,6 @@ class TestCanvasAnimation(unittest.TestCase):
         self.root.withdraw()
         self.canvas_animation = view.CanvasAnimation(self.root, self.generate_animation, self.canvas)
 
-        # Play the animation for 500ms
         self.root.after(0, self.canvas_animation.on_image_url_requested)
 
     def get_params_of_set_image(self):
