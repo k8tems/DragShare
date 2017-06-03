@@ -16,18 +16,20 @@ class TestCanvasAnimation(unittest.TestCase):
 
         # Play the animation for 500ms
         self.root.after(0, self.canvas_animation.on_image_url_requested)
-        self.root.after(500, self.on_timeout)
-        self.root.mainloop()
-
-    def on_timeout(self):
-        self.canvas_animation.on_twitter_upload_finished()
-        self.root.destroy()
 
     def test(self):
+        self.root.after(500, self.root.destroy)
+        self.root.mainloop()
         call_args_list = [i[0][0] for i in self.canvas.set_image.call_args_list]
         # each frame is played more than n times
         for i in range(1, 6):
             self.assertGreater(call_args_list.count(i), 3)
+
+    def test_on_twitter_upload_finished(self):
+        self.root.after(500, self.canvas_animation.on_twitter_upload_finished)
+        self.root.after(500, self.root.destroy)
+        self.root.mainloop()
+        call_args_list = [i[0][0] for i in self.canvas.set_image.call_args_list]
         # the scaled image is restored at the end
         self.assertEqual(6, call_args_list[-1])
 
