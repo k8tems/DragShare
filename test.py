@@ -5,20 +5,13 @@ import view
 import tkinter
 
 
-class MockCanvas(object):
-    def __init__(self):
-        self.cur_image_without_effect = None
-
-    def set_image(self, img):
-        pass
-
-
 class TestCanvasAnimation(unittest.TestCase):
     def test(self):
         generate_animation = lambda image: view.Animation([1, 2, 3, 4, 5], 10)
-        canvas = MockCanvas()
+        canvas = mock.MagicMock(cur_image_without_effect=None, set_image=lambda img: None)
 
         root = tkinter.Tk()
+        root.withdraw()
         canvas_animation = view.CanvasAnimation(root, generate_animation, canvas)
         root.after(0, canvas_animation.on_image_url_requested)
         root.after(1000, root.destroy)
