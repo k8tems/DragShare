@@ -162,7 +162,9 @@ class ScreenshotCanvas(tkinter.Canvas):
     def __init__(self, parent, image):
         tkinter.Canvas.__init__(self, parent)
         self.orig_image = image
+        # current image without any effects
         self.cur_image = self.orig_image
+        self.displayed_image = self.orig_image
         self.pack(fill=tkinter.BOTH, expand=tkinter.YES)
         # `PhotoImage` has to be instantiated after the root object and
         # also has to persist in a variable while the event loop is running
@@ -170,7 +172,7 @@ class ScreenshotCanvas(tkinter.Canvas):
         self.set_image(image)
 
     def set_image(self, image):
-        self.cur_image = image
+        self.displayed_image = image
         self.tkimage = ImageTk.PhotoImage(image)
         self.create_image(0, 0, anchor='nw', image=self.tkimage)
 
