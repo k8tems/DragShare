@@ -163,7 +163,7 @@ class ScreenshotCanvas(tkinter.Canvas):
         tkinter.Canvas.__init__(self, parent)
         self.orig_image = image
         # current image without any effects
-        self.cur_image = self.orig_image
+        self.cur_image_without_effect = self.orig_image
         self.displayed_image = self.orig_image
         self.pack(fill=tkinter.BOTH, expand=tkinter.YES)
         # `PhotoImage` has to be instantiated after the root object and
@@ -177,8 +177,8 @@ class ScreenshotCanvas(tkinter.Canvas):
         self.create_image(0, 0, anchor='nw', image=self.tkimage)
 
     def resize(self, size):
-        self.cur_image = self.orig_image.resize(size)
-        self.set_image(self.cur_image)
+        self.cur_image_without_effect = self.orig_image.resize(size)
+        self.set_image(self.cur_image_without_effect)
 
 
 class CanvasAnimation(HiddenWindow):
