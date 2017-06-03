@@ -197,7 +197,7 @@ class CanvasAnimation(HiddenWindow):
         self.after(ani.delay, self.play_animation, ani)
 
     @log_exception
-    def on_twitter_upload_finished(self, _):
+    def on_twitter_upload_finished(self):
         logger.info('Upload finished')
         self.run_animation = False
         self.canvas.set_image(self.canvas.cur_image_without_effect)
@@ -261,7 +261,7 @@ def run_image_view(image, area, twitter_settings):
     view_scale = ViewScale((area.width, area.height))
     image_view.bind('<MouseWheel>', partial(on_mouse_wheel, image_view, canvas, view_scale))
     url_retriever = ImageUrlRetriever(image_view, partial(upload_to_twitter, image, twitter_settings))
-    url_retriever.bind(event.IMAGE_URL_RETRIEVED, canvas_animation.on_twitter_upload_finished)
+    url_retriever.bind(event.IMAGE_URL_RETRIEVED, lambda e: canvas_animation.on_twitter_upload_finished())
     menu = tkinter.Menu(image_view, tearoff=0)
     menu.add_command(label='Copy', command=lambda: send_image_to_clipboard(image))
     menu.add_command(label='Upload to twitter',
