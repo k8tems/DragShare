@@ -8,8 +8,9 @@ import tkinter
 class TestCanvasAnimation(unittest.TestCase):
     def setUp(self):
         self.frames = [1, 2, 3, 4, 5]
+        self.cur_image_without_effect = 6
         self.generate_animation = lambda image: view.Animation(self.frames, 10)
-        self.canvas = mock.MagicMock(cur_image_without_effect=6)
+        self.canvas = mock.MagicMock(cur_image_without_effect=self.cur_image_without_effect)
 
         self.root = tkinter.Tk()
         self.root.withdraw()
@@ -32,7 +33,7 @@ class TestCanvasAnimation(unittest.TestCase):
         self.root.after(500, self.root.destroy)
         self.root.mainloop()
         # assert that the scaled image is restored
-        self.assertEqual(6, self.get_displayed_frames()[-1])
+        self.assertEqual(self.cur_image_without_effect, self.get_displayed_frames()[-1])
 
 
 class TestGetWinfo(unittest.TestCase):
