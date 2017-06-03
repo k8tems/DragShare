@@ -26,6 +26,7 @@ class TestCanvasAnimation(unittest.TestCase):
         # each frame is played more than n times
         for i in range(1, 6):
             self.assertGreater(call_args_list.count(i), 3)
+        # the scaled image is restored at the end
         self.assertEqual(6, call_args_list[-1])
 
 
