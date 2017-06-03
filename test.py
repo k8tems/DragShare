@@ -23,7 +23,7 @@ class TestCanvasAnimation(unittest.TestCase):
     def test(self):
         self.root.after(500, self.root.destroy)
         self.root.mainloop()
-        # assert that the expected frames have been played
+        # assert that the expected frames have been displayed
         expected_frames = self.frames * 3
         self.assertEqual(expected_frames, self.get_params_of_set_image()[:len(expected_frames)])
 
