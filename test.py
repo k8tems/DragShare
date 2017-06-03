@@ -6,16 +6,27 @@ import tkinter
 
 
 class TestCanvasAnimation(unittest.TestCase):
-    def test(self):
-        generate_animation = lambda image: view.Animation([1, 2, 3, 4, 5], 10)
-        canvas = mock.MagicMock(cur_image_without_effect=None, set_image=lambda img: None)
+    def setUp(self):
+        self.generate_animation = lambda image: view.Animation([1, 2, 3, 4, 5], 10)
+        self.canvas = mock.MagicMock(cur_image_without_effect=6)
 
-        root = tkinter.Tk()
-        root.withdraw()
-        canvas_animation = view.CanvasAnimation(root, generate_animation, canvas)
-        root.after(0, canvas_animation.on_image_url_requested)
-        root.after(1000, root.destroy)
-        root.mainloop()
+        self.root = tkinter.Tk()
+        self.root.withdraw()
+        self.canvas_animation = view.CanvasAnimation(self.root, self.generate_animation, self.canvas)
+        self.root.after(0, self.canvas_animation.on_image_url_requested)
+        self.root.after(500, self.on_timeout)
+        self.root.mainloop()
+
+    def on_timeout(self):
+        self.canvas_animation.on_twitter_upload_finished(None)
+        self.root.destroy()
+
+    def test(self):
+        call_args_list = [i[0][0] for i in self.canvas.set_image.call_args_list]
+        # each frame is played more than n times
+        for i in range(1, 6):
+            self.assertGreater(call_args_list.count(i), 3)
+        self.assertEqual(6, call_args_list[-1])
 
 
 class TestGetWinfo(unittest.TestCase):
