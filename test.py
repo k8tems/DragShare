@@ -13,6 +13,8 @@ class TestCanvasAnimation(unittest.TestCase):
         self.root = tkinter.Tk()
         self.root.withdraw()
         self.canvas_animation = view.CanvasAnimation(self.root, self.generate_animation, self.canvas)
+
+        # Play the animation for 500ms
         self.root.after(0, self.canvas_animation.on_image_url_requested)
         self.root.after(500, self.on_timeout)
         self.root.mainloop()
