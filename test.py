@@ -28,7 +28,7 @@ class TestAnimation(unittest.TestCase):
         ani = view.Animation([1, 2], None)
         self.assertEqual(1, ani.next())
         self.assertEqual(2, ani.next())
-        self.assertRaises(StopIteration, ani.next)
+        self.assertEqual(1, ani.next())
 
 
 class TestGenerateFlashingSequence(unittest.TestCase):

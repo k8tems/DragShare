@@ -123,7 +123,7 @@ class ImageUrlRetriever(HiddenWindow):
 
 
 class Animation(object):
-    """Workaround for `iter` function that doesn't allow custom attributes"""
+    """Workaround for `cycle` function that doesn't allow custom attributes"""
     def __init__(self, frames, delay):
         self.frames = frames
         self.delay = delay
@@ -131,7 +131,7 @@ class Animation(object):
 
     def next(self):
         if self.idx >= len(self.frames):
-            raise StopIteration()
+            self.idx = 0
         result = self.frames[self.idx]
         self.idx += 1
         return result
