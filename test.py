@@ -18,7 +18,7 @@ class TestCanvasAnimation(unittest.TestCase):
         self.root.mainloop()
 
     def on_timeout(self):
-        self.canvas_animation.on_twitter_upload_finished(None)
+        self.canvas_animation.on_twitter_upload_finished()
         self.root.destroy()
 
     def test(self):
