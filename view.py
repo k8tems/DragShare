@@ -203,9 +203,9 @@ class CanvasAnimation(HiddenWindow):
         self.canvas.set_image(self.canvas.orig_image)
 
     def on_image_url_requested(self):
+        """Animate the image to notify the user"""
         logger.info('Image url requested')
         self.run_animation = True
-        """Animate the image to notify the user"""
         self.after(0, self.play_animation, self.generate_animation(self.canvas.cur_image))
 
 
