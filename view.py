@@ -256,8 +256,12 @@ def run_image_view(image, area, twitter_settings, loading_gif):
     view_scale = ViewScale((area.width, area.height))
     image_view.bind('<MouseWheel>', partial(on_mouse_wheel, image_view, canvas, view_scale))
     url_retriever = ImageUrlRetriever(image_view, partial(upload_to_twitter, image, twitter_settings))
-    url_retriever.bind(event.IMAGE_URL_RETRIEVED, lambda e: canvas_animation.on_twitter_upload_finished())
-    url_retriever.bind(event.IMAGE_URL_RETRIEVAL_FAILED, lambda e: canvas_animation.on_twitter_upload_finished())
+
+    def on_upload_finished(_):
+        canvas_animation.on_twitter_upload_finished()
+
+    url_retriever.bind(event.IMAGE_URL_RETRIEVED, on_upload_finished)
+    url_retriever.bind(event.IMAGE_URL_RETRIEVAL_FAILED, on_upload_finished)
     menu = tkinter.Menu(image_view, tearoff=0)
     menu.add_command(label='Copy', command=lambda: send_image_to_clipboard(image))
     menu.add_command(label='Upload to twitter',
