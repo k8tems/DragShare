@@ -234,7 +234,7 @@ def save_file(image):
     f.close()
 
 
-def run_image_view(image, area, twitter_settings):
+def run_image_view(image, area, twitter_settings, loading_gif):
     image_view = Tk()
     # make sure the view has focus so that it can catch mouse/key events
     # `focus_force` implicitly moves the window so it has to be called before aligning the window
@@ -247,7 +247,7 @@ def run_image_view(image, area, twitter_settings):
     # `deiconify` does not show the window
     image_view.wm_deiconify()
     canvas = ScreenshotCanvas(image_view, image)
-    animation = loading.create_loading_animation('loading.gif')
+    animation = loading.create_loading_animation(loading_gif)
     canvas_animation = CanvasAnimation(image_view, animation, canvas)
     view_scale = ViewScale((area.width, area.height))
     image_view.bind('<MouseWheel>', partial(on_mouse_wheel, image_view, canvas, view_scale))
