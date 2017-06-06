@@ -28,7 +28,7 @@ def on_timer(ani, img, canvas):
 
 def dissect_gif(gif):
     result = []
-    for i in range(gif.n_frames):
+    for i in range(1, gif.n_frames):
         result.append(gif.copy().convert('RGBA'))
         gif.seek(i)
     return Gif(result, gif.info['duration'])
