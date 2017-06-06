@@ -33,7 +33,6 @@ def dissect_gif(gif):
 if __name__ == '__main__':
     root = Tk()
     img = Image.open('base.png')
-    img = img.convert('RGBA')
     root.geometry('%dx%d' % (img.width, img.height))
     canvas = view.ScreenshotCanvas(root, img)
     frames = dissect_gif(Image.open('loading.gif'))
