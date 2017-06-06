@@ -58,14 +58,6 @@ class TestScale(unittest.TestCase):
         self.assertEqual((10, 10), self.scale(-10))
 
 
-class TestAnimation(unittest.TestCase):
-    def test(self):
-        ani = view.Animation([1, 2], None)
-        self.assertEqual(1, ani.next())
-        self.assertEqual(2, ani.next())
-        self.assertEqual(1, ani.next())
-
-
 class TestGenerateFlashingSequence(unittest.TestCase):
     def test(self):
         self.assertEqual([1.0, 1.5, 2.0, 1.5, 1.0], view.generate_flashing_sequence(1.0, 2.0, 0.5))

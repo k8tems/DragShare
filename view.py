@@ -122,21 +122,6 @@ class ImageUrlRetriever(HiddenWindow):
         Thread(target=self.thread_proc).start()
 
 
-class Animation(object):
-    """Workaround for `cycle` function that doesn't allow custom attributes"""
-    def __init__(self, frames, delay):
-        self.frames = frames
-        self.delay = delay
-        self.idx = 0
-
-    def next(self):
-        if self.idx >= len(self.frames):
-            self.idx = 0
-        result = self.frames[self.idx]
-        self.idx += 1
-        return result
-
-
 def generate_flashing_sequence(start, end, step):
     """Generate a sequence of brightness values that represent a flashing effect"""
     result = []
@@ -151,11 +136,16 @@ def generate_flashing_sequence(start, end, step):
     return result
 
 
-def generate_flashing_animation(image):
-    delay = 10
-    brightnesses = generate_flashing_sequence(1, 3, 0.2)
-    frames = [ImageEnhance.Brightness(image.copy()).enhance(b) for b in brightnesses]
-    return Animation(frames, delay)
+class FlashingAnimation(object):
+    """Workaround for `cycle` function that doesn't allow custom attributes"""
+    def __init__(self):
+        self.delay = 10
+        self.idx = 0
+        from itertools import cycle
+        self.brightnesses = cycle(generate_flashing_sequence(1, 3, 0.2))
+
+    def overlay(self, img):
+        return ImageEnhance.Brightness(img.copy()).enhance(self.brightnesses.next())
 
 
 class ScreenshotCanvas(tkinter.Canvas):
@@ -257,7 +247,8 @@ def run_image_view(image, area, twitter_settings):
     # `deiconify` does not show the window
     image_view.wm_deiconify()
     canvas = ScreenshotCanvas(image_view, image)
-    canvas_animation = CanvasAnimation(image_view, generate_flashing_animation, canvas)
+    animation = FlashingAnimation()
+    canvas_animation = CanvasAnimation(image_view, animation, canvas)
     view_scale = ViewScale((area.width, area.height))
     image_view.bind('<MouseWheel>', partial(on_mouse_wheel, image_view, canvas, view_scale))
     url_retriever = ImageUrlRetriever(image_view, partial(upload_to_twitter, image, twitter_settings))
