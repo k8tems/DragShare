@@ -141,7 +141,6 @@ class FlashingAnimation(object):
     """Workaround for `cycle` function that doesn't allow custom attributes"""
     def __init__(self):
         self.delay = 10
-        self.idx = 0
         self.brightnesses = cycle(generate_flashing_sequence(1, 3, 0.2))
 
     def overlay(self, img):
