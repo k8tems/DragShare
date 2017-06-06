@@ -112,11 +112,15 @@ class ImageUrlRetriever(HiddenWindow):
         > thread, and it's state, are used to do the actual GUI manipulation.
         `event_generate` seems thread safe
         """
-        image_url = self.upload_image()
-        logging.info('image_url ' + image_url)
-        clipboard.copy(image_url)
-        # the event should be generated after the image url is copied
-        self.event_generate(event.IMAGE_URL_RETRIEVED, when='tail')
+        try:
+            image_url = self.upload_image()
+            logging.info('image_url ' + image_url)
+            clipboard.copy(image_url)
+            # the event should be generated after the image url is copied
+            self.event_generate(event.IMAGE_URL_RETRIEVED, when='tail')
+        except:
+            self.event_generate(event.IMAGE_URL_RETRIEVAL_FAILED, when='tail')
+            raise
 
     @log_exception
     def on_upload_request(self):
@@ -253,6 +257,7 @@ def run_image_view(image, area, twitter_settings, loading_gif):
     image_view.bind('<MouseWheel>', partial(on_mouse_wheel, image_view, canvas, view_scale))
     url_retriever = ImageUrlRetriever(image_view, partial(upload_to_twitter, image, twitter_settings))
     url_retriever.bind(event.IMAGE_URL_RETRIEVED, lambda e: canvas_animation.on_twitter_upload_finished())
+    url_retriever.bind(event.IMAGE_URL_RETRIEVAL_FAILED, lambda e: canvas_animation.on_twitter_upload_finished())
     menu = tkinter.Menu(image_view, tearoff=0)
     menu.add_command(label='Copy', command=lambda: send_image_to_clipboard(image))
     menu.add_command(label='Upload to twitter',
