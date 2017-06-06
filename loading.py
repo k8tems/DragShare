@@ -22,12 +22,9 @@ def on_timer(ani, img, canvas):
 
 def dissect_gif(gif):
     result = []
-    try:
-        while 1:
-            result.append(gif.copy())
-            gif.seek(len(result))
-    except EOFError:
-        pass
+    for i in range(gif.n_frames):
+        result.append(gif.copy())
+        gif.seek(i)
     return result
 
 
