@@ -61,7 +61,7 @@ def main():
         return
 
     image = take_screen_shot(area.bbox)
-    run_image_view(image, area, args.twitter_settings)
+    run_image_view(image, area, args.twitter_settings, 'loading.gif')
 
 
 if __name__ == '__main__':

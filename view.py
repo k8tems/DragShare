@@ -13,8 +13,9 @@ import clipboard
 import win32clipboard
 import yaml
 from twython import Twython
-from PIL import ImageTk, ImageEnhance
+from PIL import ImageTk
 import event
+import loading
 from exception import log_exception
 
 
@@ -110,11 +111,15 @@ class ImageUrlRetriever(HiddenWindow):
         > thread, and it's state, are used to do the actual GUI manipulation.
         `event_generate` seems thread safe
         """
-        image_url = self.upload_image()
-        logging.info('image_url ' + image_url)
-        clipboard.copy(image_url)
-        # the event should be generated after the image url is copied
-        self.event_generate(event.IMAGE_URL_RETRIEVED, when='tail')
+        try:
+            image_url = self.upload_image()
+            logging.info('image_url ' + image_url)
+            clipboard.copy(image_url)
+            # the event should be generated after the image url is copied
+            self.event_generate(event.IMAGE_URL_RETRIEVED, when='tail')
+        except:
+            self.event_generate(event.IMAGE_URL_RETRIEVAL_FAILED, when='tail')
+            raise
 
     @log_exception
     def on_upload_request(self):
@@ -122,48 +127,12 @@ class ImageUrlRetriever(HiddenWindow):
         Thread(target=self.thread_proc).start()
 
 
-class Animation(object):
-    """Workaround for `iter` function that doesn't allow custom attributes"""
-    def __init__(self, frames, delay):
-        self.frames = frames
-        self.delay = delay
-        self.idx = 0
-
-    def next(self):
-        if self.idx >= len(self.frames):
-            raise StopIteration()
-        result = self.frames[self.idx]
-        self.idx += 1
-        return result
-
-
-def generate_flashing_sequence(start, end, step):
-    """Generate a sequence of brightness values that represent a flashing effect"""
-    result = []
-    i = start
-    while i <= end:
-        result.append(i)
-        i += step
-    i = end
-    while i > start:
-        i -= step
-        result.append(i)
-    return result
-
-
-def generate_flashing_animation(image):
-    delay = 10
-    brightnesses = generate_flashing_sequence(1, 3, 0.2)
-    frames = [ImageEnhance.Brightness(image.copy()).enhance(b) for b in brightnesses]
-    return Animation(frames, delay)
-
-
 class ScreenshotCanvas(tkinter.Canvas):
-    def __init__(self, parent, image, generate_animation):
+    def __init__(self, parent, image):
         tkinter.Canvas.__init__(self, parent)
         self.orig_image = image
-        self.cur_image = self.orig_image
-        self.generate_animation = generate_animation
+        self.cur_image_without_effect = self.orig_image
+        self.displayed_image = self.orig_image
         self.pack(fill=tkinter.BOTH, expand=tkinter.YES)
         # `PhotoImage` has to be instantiated after the root object and
         # also has to persist in a variable while the event loop is running
@@ -171,27 +140,42 @@ class ScreenshotCanvas(tkinter.Canvas):
         self.set_image(image)
 
     def set_image(self, image):
-        self.cur_image = image
+        self.displayed_image = image
         self.tkimage = ImageTk.PhotoImage(image)
         self.create_image(0, 0, anchor='nw', image=self.tkimage)
 
-    def play_animation(self, ani):
-        try:
-            frame = ani.next()
-            logger.debug('showing frame %s' % frame)
-            self.set_image(frame)
-            self.after(ani.delay, self.play_animation, ani)
-        except StopIteration:
+    def resize(self, size):
+        self.cur_image_without_effect = self.orig_image.resize(size)
+        self.set_image(self.cur_image_without_effect)
+
+
+class CanvasAnimation(HiddenWindow):
+    def __init__(self, parent, animation, canvas):
+        HiddenWindow.__init__(self, parent)
+        self.animation = animation
+        self.canvas = canvas
+        self.run_animation = False
+
+    def play_animation(self):
+        if not self.run_animation:
             logger.debug('animation ended')
+            return
+        frame = self.animation.overlay(self.canvas.cur_image_without_effect)
+        logger.debug('showing frame %s' % frame)
+        self.canvas.set_image(frame)
+        self.after(self.animation.delay, self.play_animation)
 
     @log_exception
-    def on_twitter_upload_finished(self, _):
+    def on_twitter_upload_finished(self):
         logger.info('Upload finished')
-        """Animate the image to notify the user"""
-        self.after(0, self.play_animation, self.generate_animation(self.cur_image))
+        self.run_animation = False
+        self.canvas.set_image(self.canvas.cur_image_without_effect)
 
-    def resize(self, size):
-        self.set_image(self.orig_image.resize(size))
+    def on_image_url_requested(self):
+        """Animate the image to notify the user"""
+        logger.info('Image url requested')
+        self.run_animation = True
+        self.after(0, self.play_animation)
 
 
 class ViewScale(object):
@@ -229,7 +213,7 @@ def save_file(image):
     f.close()
 
 
-def run_image_view(image, area, twitter_settings):
+def run_image_view(image, area, twitter_settings, loading_gif):
     image_view = Tk()
     # make sure the view has focus so that it can catch mouse/key events
     # `focus_force` implicitly moves the window so it has to be called before aligning the window
@@ -241,14 +225,24 @@ def run_image_view(image, area, twitter_settings):
     align_window_with_area(image_view, area)
     # `deiconify` does not show the window
     image_view.wm_deiconify()
-    canvas = ScreenshotCanvas(image_view, image, generate_flashing_animation)
+    canvas = ScreenshotCanvas(image_view, image)
+    animation = loading.create_loading_animation(loading_gif)
+    canvas_animation = CanvasAnimation(image_view, animation, canvas)
     view_scale = ViewScale((area.width, area.height))
     image_view.bind('<MouseWheel>', partial(on_mouse_wheel, image_view, canvas, view_scale))
     url_retriever = ImageUrlRetriever(image_view, partial(upload_to_twitter, image, twitter_settings))
-    url_retriever.bind(event.IMAGE_URL_RETRIEVED, canvas.on_twitter_upload_finished)
+
+    def on_upload_finished(_):
+        canvas_animation.on_twitter_upload_finished()
+
+    url_retriever.bind(event.IMAGE_URL_RETRIEVED, on_upload_finished)
+    url_retriever.bind(event.IMAGE_URL_RETRIEVAL_FAILED, on_upload_finished)
     menu = tkinter.Menu(image_view, tearoff=0)
     menu.add_command(label='Copy', command=lambda: send_image_to_clipboard(image))
-    menu.add_command(label='Upload to twitter', command=url_retriever.on_upload_request)
+    menu.add_command(label='Upload to twitter',
+                     command=lambda: image_view.event_generate(event.IMAGE_URL_REQUEST, when='tail'))
     menu.add_command(label='Save', command=partial(save_file, image))
     image_view.bind(event.RIGHT_PRESS, lambda e: menu.post(e.x_root, e.y_root))
+    image_view.bind(event.IMAGE_URL_REQUEST, lambda e: canvas_animation.on_image_url_requested(), add='+')
+    image_view.bind(event.IMAGE_URL_REQUEST, lambda e: url_retriever.on_upload_request(), add='+')
     image_view.mainloop()
