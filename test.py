@@ -58,11 +58,6 @@ class TestScale(unittest.TestCase):
         self.assertEqual((10, 10), self.scale(-10))
 
 
-class TestGenerateFlashingSequence(unittest.TestCase):
-    def test(self):
-        self.assertEqual([1.0, 1.5, 2.0, 1.5, 1.0], view.generate_flashing_sequence(1.0, 2.0, 0.5))
-
-
 class TestArea(unittest.TestCase):
     def create_area(self, *args, **kwargs):
         return drag.DragArea(*args, **kwargs)

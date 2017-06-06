@@ -3,7 +3,6 @@ import re
 import tempfile
 import uuid
 import logging
-from itertools import cycle
 from functools import partial
 from Tkinter import Toplevel, Tk
 import tkinter
@@ -14,7 +13,7 @@ import clipboard
 import win32clipboard
 import yaml
 from twython import Twython
-from PIL import ImageTk, ImageEnhance
+from PIL import ImageTk
 import event
 import loading
 from exception import log_exception
@@ -126,30 +125,6 @@ class ImageUrlRetriever(HiddenWindow):
     def on_upload_request(self):
         logger.info('Got upload request')
         Thread(target=self.thread_proc).start()
-
-
-def generate_flashing_sequence(start, end, step):
-    """Generate a sequence of brightness values that represent a flashing effect"""
-    result = []
-    i = start
-    while i <= end:
-        result.append(i)
-        i += step
-    i = end
-    while i > start:
-        i -= step
-        result.append(i)
-    return result
-
-
-class FlashingAnimation(object):
-    """Workaround for `cycle` function that doesn't allow custom attributes"""
-    def __init__(self):
-        self.delay = 10
-        self.brightnesses = cycle(generate_flashing_sequence(1, 3, 0.2))
-
-    def overlay(self, img):
-        return ImageEnhance.Brightness(img.copy()).enhance(self.brightnesses.next())
 
 
 class ScreenshotCanvas(tkinter.Canvas):
