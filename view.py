@@ -3,6 +3,7 @@ import re
 import tempfile
 import uuid
 import logging
+from itertools import cycle
 from functools import partial
 from Tkinter import Toplevel, Tk
 import tkinter
@@ -141,7 +142,6 @@ class FlashingAnimation(object):
     def __init__(self):
         self.delay = 10
         self.idx = 0
-        from itertools import cycle
         self.brightnesses = cycle(generate_flashing_sequence(1, 3, 0.2))
 
     def overlay(self, img):
