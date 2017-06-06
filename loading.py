@@ -30,12 +30,15 @@ def dissect_gif(gif):
     return result
 
 
+def create_loading_animation(fname):
+    frames = dissect_gif(Image.open(fname))
+    return LoadingAnimation(cycle(frames))
+
+
 if __name__ == '__main__':
     root = Tk()
     img = Image.open('base.png')
     root.geometry('%dx%d' % (img.width, img.height))
     canvas = view.ScreenshotCanvas(root, img)
-    frames = dissect_gif(Image.open('loading.gif'))
-    ani = LoadingAnimation(cycle(frames))
-    canvas.after(0, on_timer, ani, img, canvas)
+    canvas.after(0, on_timer, create_loading_animation('loading.gif'), img, canvas)
     root.mainloop()
