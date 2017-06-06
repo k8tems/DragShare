@@ -3,13 +3,15 @@ import mock
 import drag
 import view
 import tkinter
+from itertools import cycle
 
 
 class TestCanvasAnimation(unittest.TestCase):
     def setUp(self):
-        self.frames = [1, 2, 3, 4, 5]
         self.cur_image_without_effect = 6
-        self.animation = mock.MagicMock(overlay=lambda img: img * 3, delay=10)
+        self.frames = [1, 2, 3, 4, 5]
+        self.overlay = mock.MagicMock(side_effect=cycle(self.frames))
+        self.animation = mock.MagicMock(overlay=self.overlay, delay=10)
         self.canvas = mock.MagicMock(cur_image_without_effect=self.cur_image_without_effect)
 
         self.root = tkinter.Tk()
@@ -25,8 +27,7 @@ class TestCanvasAnimation(unittest.TestCase):
         self.root.after(500, self.root.destroy)
         self.root.mainloop()
         # assert that at least 3 loops have been played
-        expected_loop = [3, 6, 9, 12, 15]
-        expected_frames = expected_loop * 3
+        expected_frames = self.frames * 3
         self.assertEqual(expected_frames, self.get_displayed_frames()[:len(expected_frames)])
 
     def test_on_twitter_upload_finished(self):
