@@ -16,6 +16,7 @@ import yaml
 from twython import Twython
 from PIL import ImageTk, ImageEnhance
 import event
+import loading
 from exception import log_exception
 
 
@@ -246,7 +247,7 @@ def run_image_view(image, area, twitter_settings):
     # `deiconify` does not show the window
     image_view.wm_deiconify()
     canvas = ScreenshotCanvas(image_view, image)
-    animation = FlashingAnimation()
+    animation = loading.create_loading_animation('loading.gif')
     canvas_animation = CanvasAnimation(image_view, animation, canvas)
     view_scale = ViewScale((area.width, area.height))
     image_view.bind('<MouseWheel>', partial(on_mouse_wheel, image_view, canvas, view_scale))
