@@ -146,15 +146,18 @@ class ScreenshotCanvas(tkinter.Canvas):
         # `PhotoImage` has to be instantiated after the root object and
         # also has to persist in a variable while the event loop is running
         self.tkimage = None
-        self.set_image(self.image.current)
+        self.set_current_image()
 
     def set_image(self, image):
         self.tkimage = ImageTk.PhotoImage(image)
         self.create_image(0, 0, anchor='nw', image=self.tkimage)
 
+    def set_current_image(self):
+        self.set_image(self.image.current)
+
     def resize(self, size):
         self.image.resize(size)
-        self.set_image(self.image.current)
+        self.set_current_image()
 
 
 class CanvasAnimation(HiddenWindow):
@@ -178,7 +181,7 @@ class CanvasAnimation(HiddenWindow):
     def on_twitter_upload_finished(self):
         logger.info('Upload finished')
         self.run_animation = False
-        self.canvas.set_image(self.image.current)
+        self.canvas.set_current_image()
 
     def on_image_url_requested(self):
         """Animate the image to notify the user"""
@@ -237,7 +240,7 @@ def run_image_view(image, area, twitter_settings, loading_gif):
     canvas_img = CanvasImage(image)
     canvas = ScreenshotCanvas(image_view, canvas_img)
     animation = loading.create_loading_animation(loading_gif)
-    canvas_animation = CanvasAnimation(image_view, animation, canvas)
+    canvas_animation = CanvasAnimation(image_view, animation, canvas, canvas_img)
     view_scale = ViewScale((area.width, area.height))
     image_view.bind('<MouseWheel>', partial(on_mouse_wheel, image_view, canvas, view_scale))
     url_retriever = ImageUrlRetriever(image_view, partial(upload_to_twitter, image, twitter_settings))
