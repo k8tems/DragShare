@@ -28,3 +28,6 @@ def dissect_gif(gif):
         gif.seek(i)
     return Gif(result, gif.info['duration'])
 
+
+def create_loading_animation(fname):
+    return LoadingAnimation(dissect_gif(Image.open(fname)))
