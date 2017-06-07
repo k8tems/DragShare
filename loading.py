@@ -1,4 +1,3 @@
-
 from itertools import cycle
 from collections import namedtuple
 from PIL import Image
