@@ -158,17 +158,18 @@ class ScreenshotCanvas(tkinter.Canvas):
 
 
 class CanvasAnimation(HiddenWindow):
-    def __init__(self, parent, animation, canvas):
+    def __init__(self, parent, animation, canvas, image):
         HiddenWindow.__init__(self, parent)
         self.animation = animation
         self.canvas = canvas
+        self.image = image
         self.run_animation = False
 
     def play_animation(self):
         if not self.run_animation:
             logger.debug('animation ended')
             return
-        frame = self.animation.overlay(self.canvas.image.current)
+        frame = self.animation.overlay(self.image.current)
         logger.debug('showing frame %s' % frame)
         self.canvas.set_image(frame)
         self.after(self.animation.delay, self.play_animation)
@@ -177,7 +178,7 @@ class CanvasAnimation(HiddenWindow):
     def on_twitter_upload_finished(self):
         logger.info('Upload finished')
         self.run_animation = False
-        self.canvas.set_image(self.canvas.image.current)
+        self.canvas.set_image(self.image.current)
 
     def on_image_url_requested(self):
         """Animate the image to notify the user"""
