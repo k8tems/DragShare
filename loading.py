@@ -9,13 +9,13 @@ class LoadingAnimation(object):
         self.loading_frames = cycle(gif.frames)
 
     def overlay(self, img):
-        back_img = Image.new('RGBA', img.size, (255, 255, 255, 200))
+        front_img = Image.new('RGBA', img.size, (255, 255, 255, 200))
         frame = self.loading_frames.next()
-        loc = (back_img.width/2-frame.width/2, back_img.height/2-frame.height/2)
-        back_img.paste(frame, loc, frame)
-        base_img = img.copy()
-        base_img.paste(back_img, (0, 0), back_img)
-        return base_img
+        loc = (front_img.width/2-frame.width/2, front_img.height/2-frame.height/2)
+        front_img.paste(frame, loc, frame)
+        back_img = img.copy()
+        back_img.paste(front_img, (0, 0), front_img)
+        return back_img
 
 
 Gif = namedtuple('Gif', 'frames delay')
