@@ -134,6 +134,9 @@ class CanvasImage(object):
         # The scaled image without overlaying
         self.current = img
 
+    def resize(self, size):
+        self.current = self.original.resize(size)
+
 
 class ScreenshotCanvas(tkinter.Canvas):
     def __init__(self, parent, image):
@@ -143,14 +146,14 @@ class ScreenshotCanvas(tkinter.Canvas):
         # `PhotoImage` has to be instantiated after the root object and
         # also has to persist in a variable while the event loop is running
         self.tkimage = None
-        self.set_image(image.current)
+        self.set_image(self.image.current)
 
     def set_image(self, image):
         self.tkimage = ImageTk.PhotoImage(image)
         self.create_image(0, 0, anchor='nw', image=self.tkimage)
 
     def resize(self, size):
-        self.image.current = self.image.original.resize(size)
+        self.image.resize(size)
         self.set_image(self.image.current)
 
 
