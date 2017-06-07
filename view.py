@@ -130,9 +130,9 @@ class ImageUrlRetriever(HiddenWindow):
 class CanvasImage(object):
     def __init__(self, img):
         # The original image without scaling or overlaying
-        self.orig_image = img
+        self.original = img
         # The scaled image without overlaying
-        self.cur_image = img
+        self.current = img
 
 
 class ScreenshotCanvas(tkinter.Canvas):
@@ -144,7 +144,7 @@ class ScreenshotCanvas(tkinter.Canvas):
         # `PhotoImage` has to be instantiated after the root object and
         # also has to persist in a variable while the event loop is running
         self.tkimage = None
-        self.set_image(image.cur_image)
+        self.set_image(image.current)
 
     def set_image(self, image):
         self.displayed_image = image
@@ -152,8 +152,8 @@ class ScreenshotCanvas(tkinter.Canvas):
         self.create_image(0, 0, anchor='nw', image=self.tkimage)
 
     def resize(self, size):
-        self.image.cur_image = self.image.orig_image.resize(size)
-        self.set_image(self.image.cur_image)
+        self.image.current = self.image.original.resize(size)
+        self.set_image(self.image.current)
 
 
 class CanvasAnimation(HiddenWindow):
@@ -167,7 +167,7 @@ class CanvasAnimation(HiddenWindow):
         if not self.run_animation:
             logger.debug('animation ended')
             return
-        frame = self.animation.overlay(self.canvas.image.cur_image)
+        frame = self.animation.overlay(self.canvas.image.current)
         logger.debug('showing frame %s' % frame)
         self.canvas.set_image(frame)
         self.after(self.animation.delay, self.play_animation)
@@ -176,7 +176,7 @@ class CanvasAnimation(HiddenWindow):
     def on_twitter_upload_finished(self):
         logger.info('Upload finished')
         self.run_animation = False
-        self.canvas.set_image(self.canvas.image.cur_image)
+        self.canvas.set_image(self.canvas.image.current)
 
     def on_image_url_requested(self):
         """Animate the image to notify the user"""
