@@ -127,17 +127,24 @@ class ImageUrlRetriever(HiddenWindow):
         Thread(target=self.thread_proc).start()
 
 
+class CanvasImage(object):
+    def __init__(self, img):
+        # The original image without scaling or overlaying
+        self.orig_image = img
+        # The scaled image without overlaying
+        self.cur_image = img
+
+
 class ScreenshotCanvas(tkinter.Canvas):
     def __init__(self, parent, image):
         tkinter.Canvas.__init__(self, parent)
-        self.orig_image = image
-        self.cur_image_without_effect = self.orig_image
-        self.displayed_image = self.orig_image
+        self.image = image
+        self.displayed_image = None
         self.pack(fill=tkinter.BOTH, expand=tkinter.YES)
         # `PhotoImage` has to be instantiated after the root object and
         # also has to persist in a variable while the event loop is running
         self.tkimage = None
-        self.set_image(image)
+        self.set_image(image.cur_image)
 
     def set_image(self, image):
         self.displayed_image = image
@@ -145,8 +152,8 @@ class ScreenshotCanvas(tkinter.Canvas):
         self.create_image(0, 0, anchor='nw', image=self.tkimage)
 
     def resize(self, size):
-        self.cur_image_without_effect = self.orig_image.resize(size)
-        self.set_image(self.cur_image_without_effect)
+        self.image.cur_image = self.image.orig_image.resize(size)
+        self.set_image(self.image.cur_image)
 
 
 class CanvasAnimation(HiddenWindow):
@@ -160,7 +167,7 @@ class CanvasAnimation(HiddenWindow):
         if not self.run_animation:
             logger.debug('animation ended')
             return
-        frame = self.animation.overlay(self.canvas.cur_image_without_effect)
+        frame = self.animation.overlay(self.canvas.image.cur_image)
         logger.debug('showing frame %s' % frame)
         self.canvas.set_image(frame)
         self.after(self.animation.delay, self.play_animation)
@@ -169,7 +176,7 @@ class CanvasAnimation(HiddenWindow):
     def on_twitter_upload_finished(self):
         logger.info('Upload finished')
         self.run_animation = False
-        self.canvas.set_image(self.canvas.cur_image_without_effect)
+        self.canvas.set_image(self.canvas.image.cur_image)
 
     def on_image_url_requested(self):
         """Animate the image to notify the user"""
@@ -225,7 +232,8 @@ def run_image_view(image, area, twitter_settings, loading_gif):
     align_window_with_area(image_view, area)
     # `deiconify` does not show the window
     image_view.wm_deiconify()
-    canvas = ScreenshotCanvas(image_view, image)
+    canvas_img = CanvasImage(image)
+    canvas = ScreenshotCanvas(image_view, canvas_img)
     animation = loading.create_loading_animation(loading_gif)
     canvas_animation = CanvasAnimation(image_view, animation, canvas)
     view_scale = ViewScale((area.width, area.height))
