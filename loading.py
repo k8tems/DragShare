@@ -1,6 +1,6 @@
 from itertools import cycle
-from PIL import ImageEnhance, Image
 from collections import namedtuple
+from PIL import Image
 
 
 class LoadingAnimation(object):
@@ -9,11 +9,13 @@ class LoadingAnimation(object):
         self.loading_frames = cycle(gif.frames)
 
     def overlay(self, img):
-        enhanced_img = ImageEnhance.Brightness(img.copy()).enhance(4)
+        front_img = Image.new('RGBA', img.size, (255, 255, 255, 200))
         frame = self.loading_frames.next()
-        loc = (enhanced_img.width/2-frame.width/2, enhanced_img.height/2-frame.height/2)
-        enhanced_img.paste(frame, loc, frame)
-        return enhanced_img
+        loc = (front_img.width/2-frame.width/2, front_img.height/2-frame.height/2)
+        front_img.paste(frame, loc, frame)
+        back_img = img.copy()
+        back_img.paste(front_img, (0, 0), front_img)
+        return back_img
 
 
 Gif = namedtuple('Gif', 'frames delay')
