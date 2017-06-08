@@ -2,7 +2,6 @@ import argparse
 import logging
 import logging.config
 import os
-import tkMessageBox
 from ctypes import windll
 import yaml
 from desktopmagic.screengrab_win32 import getRectAsImage
@@ -10,6 +9,7 @@ from tkinter import Tk
 import drag
 from exception import log_exception
 from view import run_image_view
+import error
 
 
 logger = logging.getLogger(__name__)
@@ -24,13 +24,6 @@ def get_args():
 
 def configure_logging(logging_settings):
     logging.config.dictConfig(yaml.load(open(logging_settings)))
-
-
-def show_error(msg):
-    # hide required tkinter root window
-    root = Tk()
-    root.withdraw()
-    tkMessageBox.showerror('Error', msg)
 
 
 def take_screen_shot(bbox):
@@ -51,7 +44,9 @@ def main():
     logger.info('Initiating')
 
     if not os.path.exists(args.twitter_settings):
-        show_error('%s does not exist' % args.twitter_settings)
+        # root is required to show message box
+        Tk().withdraw()
+        error.display('%s does not exist' % args.twitter_settings)
         return
 
     area = drag.monitor_drag()
