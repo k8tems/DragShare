@@ -7,7 +7,6 @@ from functools import partial
 from Tkinter import Toplevel, Tk
 import tkinter
 import tkFileDialog
-import tkMessageBox
 from StringIO import StringIO
 from threading import Thread
 import clipboard
@@ -17,6 +16,7 @@ from twython import Twython
 from PIL import ImageTk
 import event
 import loading
+import error
 from exception import log_exception
 
 
@@ -252,7 +252,7 @@ def run_image_view(image, area, twitter_settings, loading_gif):
     def on_upload_failed(_):
         on_upload_finished(_)
         # hide required tkinter root window
-        tkMessageBox.showerror('Error', 'Upload failed')
+        error.display('Upload failed')
 
     url_retriever.bind(event.IMAGE_URL_RETRIEVED, on_upload_finished)
     url_retriever.bind(event.IMAGE_URL_RETRIEVAL_FAILED, on_upload_failed)
