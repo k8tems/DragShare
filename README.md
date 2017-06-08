@@ -49,5 +49,5 @@ C:\Python27\Scripts\pyinstaller main.py
 - [x] Log exceptions
 - [x] Save image to disk
 - [x] Do I/O asynchronously
+- [x] Notify user if anything goes wrong with the upload
 - [ ] Support google image search
-- [ ] Notify user if anything goes wrong with the upload
