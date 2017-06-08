@@ -7,6 +7,7 @@ from functools import partial
 from Tkinter import Toplevel, Tk
 import tkinter
 import tkFileDialog
+import tkMessageBox
 from StringIO import StringIO
 from threading import Thread
 import clipboard
@@ -112,6 +113,7 @@ class ImageUrlRetriever(HiddenWindow):
         `event_generate` seems thread safe
         """
         try:
+            a
             image_url = self.upload_image()
             logging.info('image_url ' + image_url)
             clipboard.copy(image_url)
@@ -248,8 +250,13 @@ def run_image_view(image, area, twitter_settings, loading_gif):
     def on_upload_finished(_):
         canvas_animation.on_twitter_upload_finished()
 
+    def on_upload_failed(_):
+        on_upload_finished(_)
+        # hide required tkinter root window
+        tkMessageBox.showerror('Error', 'Upload failed')
+
     url_retriever.bind(event.IMAGE_URL_RETRIEVED, on_upload_finished)
-    url_retriever.bind(event.IMAGE_URL_RETRIEVAL_FAILED, on_upload_finished)
+    url_retriever.bind(event.IMAGE_URL_RETRIEVAL_FAILED, on_upload_failed)
     menu = tkinter.Menu(image_view, tearoff=0)
     menu.add_command(label='Copy', command=lambda: send_image_to_clipboard(image))
     menu.add_command(label='Save', command=partial(save_file, image))
