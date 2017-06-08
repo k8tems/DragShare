@@ -251,7 +251,6 @@ def run_image_view(image, area, twitter_settings, loading_gif):
 
     def on_upload_failed(_):
         on_upload_finished(_)
-        # hide required tkinter root window
         error.display('Upload failed')
 
     url_retriever.bind(event.IMAGE_URL_RETRIEVED, on_upload_finished)
