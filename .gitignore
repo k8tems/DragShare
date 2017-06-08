@@ -1,6 +1,5 @@
 .idea
-buildd.bat
-buildp.bat
+build.bat
 build
 dist
 main.spec
