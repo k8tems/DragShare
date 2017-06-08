@@ -32,7 +32,10 @@ main.py
 ### Building the app
 Note: building with --onefile option substantially slows down launch
 ```
-C:\Python27\Scripts\pyinstaller main.py
+set PYINSTALLER=C:\Python27\Scripts\pyinstaller
+set TWITTER_SETTINGS=twitter.yml
+set LOGGING_SETTINGS=log.yml
+build.bat
 ```
 
 - [x] Tweet specified image
