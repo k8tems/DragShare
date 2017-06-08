@@ -117,9 +117,9 @@ def create_windows(drag_area):
     drag_window = DragWindow(root, drag_area)
     back_window = BackWindow(root)
     back_window.bind(event.MOUSE_MOVE, drag_window.on_back_motion)
-    back_window.bind(event.LEFT_PRESS, drag_window.on_back_press)
-    back_window.bind(event.RIGHT_PRESS, root.on_finish)
-    back_window.bind(event.LEFT_RELEASE, root.on_finish)
+    back_window.bind(event.MOUSE_LEFT_PRESS, drag_window.on_back_press)
+    back_window.bind(event.MOUSE_RIGHT_PRESS, root.on_finish)
+    back_window.bind(event.MOUSE_LEFT_RELEASE, root.on_finish)
     return root
 
 

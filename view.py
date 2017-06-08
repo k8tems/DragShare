@@ -255,7 +255,7 @@ def run_image_view(image, area, twitter_settings, loading_gif):
     menu.add_command(label='Upload to twitter',
                      command=lambda: image_view.event_generate(event.IMAGE_URL_REQUEST, when='tail'))
     menu.add_command(label='Save', command=partial(save_file, image))
-    image_view.bind(event.RIGHT_PRESS, lambda e: menu.post(e.x_root, e.y_root))
+    image_view.bind(event.MOUSE_RIGHT_PRESS, lambda e: menu.post(e.x_root, e.y_root))
     image_view.bind(event.IMAGE_URL_REQUEST, lambda e: canvas_animation.on_image_url_requested(), add='+')
     image_view.bind(event.IMAGE_URL_REQUEST, lambda e: url_retriever.on_upload_request(), add='+')
     image_view.mainloop()
