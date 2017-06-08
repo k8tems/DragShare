@@ -113,7 +113,6 @@ class ImageUrlRetriever(HiddenWindow):
         `event_generate` seems thread safe
         """
         try:
-            a
             image_url = self.upload_image()
             logging.info('image_url ' + image_url)
             clipboard.copy(image_url)
