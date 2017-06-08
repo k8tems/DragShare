@@ -8,7 +8,7 @@ windows 10
 python2.7  # can't get compiling to work with py3
 ```
 
-### Files that need to be in the same folder
+### Files required in the same folder
 `twitter.yml` containing api credentials of dummy twitter account for uploading images  
 the twitter account has to be public
 ```
