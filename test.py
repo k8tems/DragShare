@@ -1,41 +1,6 @@
 import unittest
-import mock
 import drag
 import view
-import tkinter
-from itertools import cycle
-
-
-class TestCanvasAnimation(unittest.TestCase):
-    def setUp(self):
-        self.cur_image_without_effect = 6
-        self.frames = [1, 2, 3, 4, 5]
-        self.overlay = mock.MagicMock(side_effect=cycle(self.frames))
-        self.animation = mock.MagicMock(overlay=self.overlay, delay=10)
-        self.canvas = mock.MagicMock(cur_image_without_effect=self.cur_image_without_effect)
-
-        self.root = tkinter.Tk()
-        self.root.withdraw()
-        self.canvas_animation = view.CanvasAnimation(self.root, self.animation, self.canvas)
-
-        self.root.after(0, self.canvas_animation.on_image_url_requested)
-
-    def get_displayed_frames(self):
-        return [i[0][0] for i in self.canvas.set_image.call_args_list]
-
-    def test(self):
-        self.root.after(500, self.root.destroy)
-        self.root.mainloop()
-        # assert that at least 3 loops have been played
-        expected_frames = self.frames * 3
-        self.assertEqual(expected_frames, self.get_displayed_frames()[:len(expected_frames)])
-
-    def test_on_twitter_upload_finished(self):
-        self.root.after(500, self.canvas_animation.on_twitter_upload_finished)
-        self.root.after(500, self.root.destroy)
-        self.root.mainloop()
-        # assert that the scaled image is restored
-        self.assertEqual(self.cur_image_without_effect, self.get_displayed_frames()[-1])
 
 
 class TestGetWinfo(unittest.TestCase):
