@@ -30,11 +30,9 @@ main.py
 ```
 
 ### Building the app
-Note: building with --onefile option substantially slows down launch
 ```
-set PYINSTALLER=C:\Python27\Scripts\pyinstaller
-set TWITTER_SETTINGS=twitter.yml
-set LOGGING_SETTINGS=log.yml
+REM override path to pyinstaller if necessary
+REM set PYINSTALLER=Your path to pyinstaller
 build.bat
 ```
 

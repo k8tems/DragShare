@@ -1,3 +1,6 @@
+if "%PYINSTALLER%" == "" set PYINSTALLER=C:\Python27\Scripts\pyinstaller
+if "%TWITTER_SETTINGS%" == ""  set TWITTER_SETTINGS=twitter.yml
+if "%LOGGING_SETTINGS%" == ""  set LOGGING_SETTINGS=log.yml
 set APP_NAME=dragshare
 set DIST_DIR=dist\release
 set APP_DIR=%DIST_DIR%\%APP_NAME%
