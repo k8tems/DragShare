@@ -1,4 +1,5 @@
 MOUSE_MOVE = '<Motion>'
+MOUSE_WHEEL = '<MouseWheel>'
 LEFT_PRESS = '<Button-1>'
 LEFT_RELEASE = '<ButtonRelease-1>'
 RIGHT_PRESS = '<Button-3>'

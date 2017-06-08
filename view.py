@@ -242,7 +242,7 @@ def run_image_view(image, area, twitter_settings, loading_gif):
     animation = loading.create_loading_animation(loading_gif)
     canvas_animation = CanvasAnimation(image_view, animation, canvas, canvas_img)
     view_scale = ViewScale((area.width, area.height))
-    image_view.bind('<MouseWheel>', partial(on_mouse_wheel, image_view, canvas, view_scale))
+    image_view.bind(event.MOUSE_WHEEL, partial(on_mouse_wheel, image_view, canvas, view_scale))
     url_retriever = ImageUrlRetriever(image_view, partial(upload_to_twitter, image, twitter_settings))
 
     def on_upload_finished(_):
